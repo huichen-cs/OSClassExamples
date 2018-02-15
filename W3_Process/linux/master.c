@@ -5,9 +5,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int main() {
+int main(int argc, char *argv[]) {
     pid_t pid;
+    long maxiter = 10000000;
+    char maxiterbuf[128];
 
+    
+    if (argc > 1) {
+        sscanf(argv[1], "%ld", &maxiter);
+    }
+    snprintf(maxiterbuf, sizeof(maxiterbuf), "%ld", maxiter);
     printf("Parent starts at: PID=%d\n", getpid());
 
     /* fork a child process. see manual: man 2 fork */
@@ -18,7 +25,7 @@ int main() {
         exit(1);
     } else if (pid == 0) { /* child */
         printf("Child is forked at: PID=%d\n", getpid());
-        execlp("./worker", "workder", "10000000", "11111", "99999", NULL); 
+        execlp("./worker", "workder", maxiterbuf, "11111", "99999", NULL); 
     } else { /* parent */
         /* block parent */
         wait(NULL);
