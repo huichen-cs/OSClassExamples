@@ -15,7 +15,7 @@ int main(int argc, char* argv[]) {
     }
     printf("worker: maxiter = %ld xseed = %d yseed = %d\n"
             , maxiter, xseed, yseed);
-    printf("worker: pi = %lf\n", estimatepi(10000000, 12345, 54321));
+    printf("worker: pi = %lf\n", estimatepi(maxiter, xseed, yseed));
 }
 
 static double estimatepi(long maxiters, unsigned int xseed, unsigned yseed) {
