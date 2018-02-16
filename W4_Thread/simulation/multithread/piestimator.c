@@ -9,7 +9,10 @@
 #include "worker.h"
 
 /*
- * modeled after the example program pthread_create(2)
+ * modeled after the example program in pthread_create(3)
+ * another example worth investigating is in pthread_attr_init(3)
+ *
+ *   
  */
 int main(int argc, char *argv[]) {
     long long totalaccepted = 0, trials = 0;
