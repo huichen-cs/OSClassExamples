@@ -25,7 +25,7 @@ int main(int argc, char *argv[]) {
         exit(1);
     } else if (pid == 0) { /* child */
         printf("Child is forked at: PID=%d\n", getpid());
-        execlp("./worker", "workder", maxiterbuf, "11111", "99999", NULL); 
+        execlp("./worker", "worker", maxiterbuf, "11111", "99999", NULL); 
     } else { /* parent */
         /* block parent */
         wait(NULL);
