@@ -12,7 +12,7 @@ int main(int argc, char *argv[]) {
         pid = atoi(argv[1]);
     }
 
-    printf("Process PID=%d attempts to kill process KID=%d\n", 
+    printf("Process PID=%d attempts to kill process PID=%d\n", 
             getpid(), pid);
 
     status = kill(pid, SIGKILL);
