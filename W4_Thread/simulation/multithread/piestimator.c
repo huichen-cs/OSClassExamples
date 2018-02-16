@@ -23,13 +23,13 @@ int main(int argc, char *argv[]) {
     if (argc > 1) {
         sscanf(argv[1], "%d", &num_threads);
     } else {
-        printf("Usage: %s <NUMBER_OF_PROCESSES> <P1_MAX_ITERS> <P1_SEED_X> <P1_SEED_Y> <...>\n"
+        printf("Usage: %s <NUMBER_OF_THREADS> <P1_MAX_ITERS> <P1_SEED_X> <P1_SEED_Y> <...>\n"
                 , argv[0]);
         exit(EXIT_SUCCESS);
     }
 
     if (argc < num_threads*3+2) {
-        printf("Usage: %s <NUMBER_OF_PROCESSES> <P1_MAX_ITERS> <P1_SEED_X> <P1_SEED_Y> <...>\n"
+        printf("Usage: %s <NUMBER_OF_THREADS> <P1_MAX_ITERS> <P1_SEED_X> <P1_SEED_Y> <...>\n"
                 , argv[0]);
         exit(EXIT_SUCCESS);
     }
