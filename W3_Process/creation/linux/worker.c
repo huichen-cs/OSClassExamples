@@ -22,7 +22,8 @@ static double estimatepi(long maxiters, unsigned int xseed, unsigned yseed) {
     /* 
      * A simple Monte Carlo method: 
      *
-     * Consider a square of unit length, randomly generate
+     * Consider a square of the unit length that bounds a 
+     * circle of the unit diameter, randomly generate
      * a point in the square, if it is within the circle
      * accept it; otherwise reject it. The probability
      * a point is being accept is,

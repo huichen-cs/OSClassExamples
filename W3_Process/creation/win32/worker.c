@@ -20,7 +20,8 @@ static double estimatepi(long maxiters, unsigned int seed) {
     /* 
      * A simple Monte Carlo method: 
      *
-     * Consider a square of unit length, randomly generate
+     * Consider a square of the unit length that bounds a 
+     * circle of the unit diameter within, randomly generate
      * a point in the square, if it is within the circle
      * accept it; otherwise reject it. The probability
      * a point is being accept is,
@@ -41,6 +42,12 @@ static double estimatepi(long maxiters, unsigned int seed) {
     long accepted = 0;
 
 
+    /*
+     * The choice of random number generation process
+     * is poor. The process of generating x and
+     * that y should be two independent processes;
+     * unfortunately, the following isn't. 
+     */
     srand(seed);
     for (iter=0; iter<maxiters; iter++) {
         x = (double)rand() / ((double)(RAND_MAX) + 1.); 
