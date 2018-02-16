@@ -74,7 +74,7 @@ static long long estimatepi(long long maxiters , unsigned int xseed, unsigned ys
         }
     }
 
-    pi = (double)accepted / (double)maxiters;
+    pi = (double)accepted / (double)maxiters * 4.0;
     printf("\tworker at pid=%d: accepted = %lld pi = %lf\n", getpid(), accepted, pi);
 
 
