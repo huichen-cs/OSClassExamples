@@ -1,9 +1,9 @@
-all: tobinary
+all: decimal2binary
 
 CXXFLAGS=-Wall
 
-tobinary: tobinary.cpp
-	$(CXX) $(CXXFLAGS) tobinary.cpp -o tobinary
+decimal2binary: decimal2binary.cpp
+	$(CXX) $(CXXFLAGS) decimal2binary.cpp -o decimal2binary
 
 clean:
-	$(RM) tobinary
+	$(RM) decimal2binary
