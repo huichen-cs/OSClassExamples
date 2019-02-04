@@ -8,7 +8,6 @@
  */
 #include <iostream>
 
-// #include <cstring>  /* to use strerror: see "man 3 strerror"    */
 #include <cstdlib>  /* to use exit: see "man 3 exit"            */
 
 #include <windows.h> /* Windows API Functions: CreateFile, ReadFile, WriteFile */
