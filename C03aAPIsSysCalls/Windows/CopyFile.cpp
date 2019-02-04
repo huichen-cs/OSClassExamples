@@ -8,7 +8,7 @@
  */
 #include <iostream>
 
-#include <cstring>  /* to use strerror: see "man 3 strerror"    */
+// #include <cstring>  /* to use strerror: see "man 3 strerror"    */
 #include <cstdlib>  /* to use exit: see "man 3 exit"            */
 
 #include <windows.h> /* Windows API Functions: CreateFile, ReadFile, WriteFile */
@@ -116,7 +116,7 @@ static void ExitIfFailed(char *srcpathname, char *dstpathname, int status) {
 static int CopyFile(HANDLE hSrcFile, HANDLE hDstFile) {
     char buffer[BUFFER_SIZE];
     DWORD bytesRead, bytesWritten;
-    BOOL readStatus, writeStatus;
+    BOOL readStatus;
 
     // See https://docs.microsoft.com/en-us/windows/desktop/api/fileapi/nf-fileapi-readfile
     while ((readStatus = ReadFile(hSrcFile,

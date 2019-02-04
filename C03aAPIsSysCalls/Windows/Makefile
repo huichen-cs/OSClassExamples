@@ -1,6 +1,6 @@
 all: CopyFile.exe
 
-CFLAGS = /EHsc
+CFLAGS = /W3 /EHsc
 
 CopyFile.exe: CopyFile.obj
 	$(CXX) CopyFile.obj /FeCopyFile.exe
