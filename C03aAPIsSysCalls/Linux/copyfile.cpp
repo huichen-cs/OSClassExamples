@@ -9,7 +9,7 @@
 
 #include <unistd.h> /* to use close: see "man 2 close"          
                      * to use read:  see "man 2 read "          
-                     * to use write: see "man 2 read "          */
+                     * to use write: see "man 2 write"          */
 
 
 static void usage(char* app);
