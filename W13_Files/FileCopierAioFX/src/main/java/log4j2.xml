@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<Configuration status="WARN">
+	<Appenders>
+		<Console name="Console" target="SYSTEM_OUT">
+			<PatternLayout
+				pattern="%d{HH:mm:ss.SSS} [%t] %-5level %l - %msg%n" />
+		</Console>
+		<File name="LogFile" fileName="FileCopierFX.log" immediateFlush="true"
+			append="false">
+			<PatternLayout
+				pattern="%d{yyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} %l - %msg%n" />
+		</File>
+		<!-- includeLocation="true" must be included below; otherwise %l does not 
+			work in the above -->
+		<Async name="ASYNCFILE" includeLocation="true">
+			<AppenderRef ref="LogFile" />
+		</Async>
+	</Appenders>
+	<Loggers>
+		<Logger name="edu.cuny.brooklyn.ioaio" level="ALL"
+			additivity="false">
+			<AppenderRef ref="Console" level="INFO"/>
+			<AppenderRef ref="ASYNCFILE" level="ALL"/>
+		</Logger>
+		<Root level="ALL">
+			<AppenderRef ref="Console" level="INFO"/>
+			<AppenderRef ref="ASYNCFILE" level="ALL"/>
+		</Root>
+	</Loggers>
+</Configuration>
+
