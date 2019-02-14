@@ -20,16 +20,17 @@ int main(int argc, char *argv[]) {
     /* fork a child process. see manual: man 2 fork */
     pid = fork();
 
-    if (-1 == pid) { /* error */
+    if (-1 == pid) { /* error occurred */
         perror("fork()");
-        exit(1);
-    } else if (pid == 0) { /* child */
+        exit(EXIT_FAILURE);
+    } else if (pid == 0) { /* child process */
         printf("Child is forked at: PID=%d\n", getpid());
         execlp("./worker", "worker", maxiterbuf, "11111", "99999", NULL); 
     } else { /* parent */
-        /* block parent */
+        /* block parent, i.e., the parent will wait for the child to complete
+	 * (or is suspended until the child completes)  */
         wait(NULL);
-        printf("Child completes, and parent exists\n");
+        printf("Child completes, and parent is to exit\n");
     }
 
     return 0;
