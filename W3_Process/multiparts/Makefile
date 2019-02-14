@@ -1,10 +1,10 @@
-all: memoryex
+all: memorylayout
 
 CFLAGS=-Wall
 
-memoryex: memoryex.o
-	$(CC) -o memoryex memoryex.o
+memorylayout: memorylayout.o
+	$(CC) -o memorylayout memorylayout.o
 
 
 clean:
-	$(RM) memoryex.o memoryex
+	$(RM) memorylayout.o memorylayout
