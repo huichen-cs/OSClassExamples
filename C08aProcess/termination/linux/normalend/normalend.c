@@ -3,9 +3,9 @@
 /*
  * On Debian/Ubuntu:
  *
- * sudo apt-get install strace
- * make
- * strace ./normal
+ * apt-get install strace
+ *   make
+ *   strace ./normal
  * */
 int main() {
     printf("Hello, World!\n");
