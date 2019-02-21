@@ -31,6 +31,7 @@ void *part_sum_runner(void *param) {
 
   part_sums[worker_idx] = sum;
 
+  printf("worker (worker_idx=%d) exited\n", worker_idx);
   pthread_exit(0);
 }
 
