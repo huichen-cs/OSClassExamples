@@ -28,7 +28,10 @@ int main(int argc, char *argv[]) {
     exit(EXIT_FAILURE);
   }
   numbers = mk_random_numbers(num_numbers);
+
+  /*
   print_array("numbers", num_numbers, numbers);
+  */
 
   pthread_t *tids;  /* the thread identifier */
   pthread_attr_t *attrs; /* set of thread attributes */
