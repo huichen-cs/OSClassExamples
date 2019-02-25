@@ -2,7 +2,7 @@ all: normalend
 
 CFLAGS=-Wall
 
-normalend: normalend.c
+normalend: normalend.o
 	$(CC) $(CFLAGS) -o normalend normalend.o
 
 clean:
