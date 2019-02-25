@@ -26,7 +26,7 @@ int main() {
         sleep(15);
         printf("In Child process (pid=%d): child is exiting with code 123\n",
                 getpid());
-        abort();
+        // abort();
     } if (pid > 0) { /* in paranet */
         printf("In Parent process (pid=%d)\n", getpid());
         wait(&status);
