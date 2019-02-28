@@ -1,3 +1,9 @@
+/**
+ * This program is from 
+ *  Silberschatz, Abraham, Greg Gagne, and Peter B. Galvin. Operating system
+ *  concepts. Wiley, 2018
+ */
+
 #include <pthread.h> 
 #include <stdio.h> 
 
