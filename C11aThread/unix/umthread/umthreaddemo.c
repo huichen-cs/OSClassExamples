@@ -20,11 +20,27 @@ int main(int argc, char* argv[]) {
     make_hw_context();
 
     
-    while (!hu_exited || !hw_exited) {
-        printf("hu_exited = %d hw_exited = %d\n", hu_exited, hw_exited);
+    /* A simple non-preemptive round robin scheduler: 
+     * Below is the main dispatch loop */
+    while (1) {
+        if (hu_exited) {
+            printf("The hello user thread has exited.\n");
+        }
+        if (hw_exited) {
+            printf("The hello world thread has exited.\n");
+        }
+
+        /* no more threds to schedule */
+        if (hw_exited && hu_exited) {
+            break;
+        }
+
+        /* dispatch the hello user thread to CPU */
         if (!hu_exited) {
             swapcontext(&main_context, &hu_context);
         }
+
+        /* dispatch the hellow world thread to CPU */
         if (!hw_exited) {
             swapcontext(&main_context, &hw_context);
         }
@@ -39,11 +55,13 @@ static void hello_user() {
         fflush(stdout);
         usleep(50000);
 
-        /* switch to the "hello world" thread */
+        /* yeild to the scheduler thread */
         if (!hw_exited) {
-            swapcontext(&hu_context, &hw_context);
+            swapcontext(&hu_context, &main_context);
         }
     }
+
+    /* yeild to the scheduler thread */
     printf("hu exiting ...\n");
     hu_exited = 1;
     swapcontext(&hu_context, &main_context);
@@ -55,11 +73,13 @@ static void hello_world() {
         fflush(stdout);
         usleep(50000);
 
-        /* switch to the "hello user" thread */
+        /* yeild to the scheduler thread */
         if (!hw_exited) {
-            swapcontext(&hw_context, &hu_context);
+            swapcontext(&hw_context, &main_context);
         }
     }
+
+    /* yeild to the scheduler thread */
     printf("hw exiting ...\n");
     hw_exited = 1;
     swapcontext(&hw_context, &main_context);
