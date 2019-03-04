@@ -95,7 +95,7 @@ static void make_hw_context() {
 
     hw_context.uc_stack.ss_sp = malloc(STACK_SIZE);
     hw_context.uc_stack.ss_size = STACK_SIZE;
-    hu_context.uc_stack.ss_flags = 0;
+    hw_context.uc_stack.ss_flags = 0;
 
     makecontext(&hw_context, hello_world, 1);
 }
