@@ -10,5 +10,5 @@ The program demonstrates we can use a timer to switch threads to CPU
 preemptively; however, the program isn't complete because one threads
 may not run to completion if one thread exits. This is done intentionally
 to amplify the mechanism to do the preemptive scheduling. The complete
-vesion that is slightly longer is in [../um2tschedshc](um2tschedshc).
+vesion that is slightly longer is in [../um2tschedshc](../um2tschedshc).
 
