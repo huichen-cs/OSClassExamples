@@ -34,15 +34,9 @@ int main(int argc, char *argv[]) {
    char func1_stack[16384];
    char func2_stack[16384];
 
-#ifdef __x86_64__
-   printf("Function func1 is at: %lp\n", &func1);
-   printf("Function func2 is at: %lp\n", &func2);
-   printf("Function main is at:  %lp\n", &main);
-#else
    printf("Function func1 is at: %p\n", &func1);
    printf("Function func2 is at: %p\n", &func2);
    printf("Function main is at:  %p\n", &main);
-#endif
 
    if (getcontext(&uctx_func1) == -1) {
        handle_error("getcontext");
