@@ -1,4 +1,5 @@
 #define _GNU_SOURCE
+#include <stdio.h>
 #include <ucontext.h>
 
 #include "printctx.h"
