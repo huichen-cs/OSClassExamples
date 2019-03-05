@@ -2,6 +2,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "printctx.h"
+
 static ucontext_t uctx_main, uctx_func1, uctx_func2;
 
 #define handle_error(msg) \
@@ -32,6 +34,16 @@ int main(int argc, char *argv[]) {
    char func1_stack[16384];
    char func2_stack[16384];
 
+#ifdef __x86_64__
+   printf("Function func1 is at: %lp\n", &func1);
+   printf("Function func2 is at: %lp\n", &func2);
+   printf("Function main is at:  %lp\n", &main);
+#else
+   printf("Function func1 is at: %p\n", &func1);
+   printf("Function func2 is at: %p\n", &func2);
+   printf("Function main is at:  %p\n", &main);
+#endif
+
    if (getcontext(&uctx_func1) == -1) {
        handle_error("getcontext");
    }
@@ -39,6 +51,8 @@ int main(int argc, char *argv[]) {
    uctx_func1.uc_stack.ss_size = sizeof(func1_stack);
    uctx_func1.uc_link = &uctx_main;
    makecontext(&uctx_func1, func1, 0);
+   printf("Func1 ucontext: -----------------------\n");
+   print_ucontext(&uctx_func1);
 
    if (getcontext(&uctx_func2) == -1) {
        handle_error("getcontext");
@@ -48,6 +62,8 @@ int main(int argc, char *argv[]) {
    /* Successor context is f1(), unless argc > 1 */
    uctx_func2.uc_link = (argc > 1) ? NULL : &uctx_func1;
    makecontext(&uctx_func2, func2, 0);
+   printf("Func2 ucontext: -----------------------\n");
+   print_ucontext(&uctx_func2);
 
    printf("main: swapcontext(&uctx_main, &uctx_func2)\n");
    if (swapcontext(&uctx_main, &uctx_func2) == -1) {
