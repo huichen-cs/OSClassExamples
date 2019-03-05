@@ -10,7 +10,8 @@ struct thread_info {
     long long accepted;
 };
 
-void *piworker(void *tinfo);
+
+void *piworker(void *thread_num);
 
 #define handle_error_en(en, msg) \
     do { errno = en; perror(msg); exit(EXIT_FAILURE); } while (0)

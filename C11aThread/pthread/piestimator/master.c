@@ -8,16 +8,15 @@
 
 #include "worker.h"
 
+struct thread_info *tinfo;
+
 /*
- * modeled after the example program in pthread_create(3)
+ * This example is modeled after the example program in pthread_create(3)
  * another example worth investigating is in pthread_attr_init(3)
- *
- *   
  */
 int main(int argc, char *argv[]) {
     long long totalaccepted = 0, trials = 0;
-    int tnum, num_threads, status;
-    struct thread_info *tinfo;
+    int scope, tnum, num_threads, status;
     pthread_attr_t attr;
     void *res;
     double pi;
@@ -26,14 +25,14 @@ int main(int argc, char *argv[]) {
     if (argc > 1) {
         sscanf(argv[1], "%d", &num_threads);
     } else {
-        printf("Usage: %s <NUMBER_OF_THREADS> <P1_MAX_ITERS> <P1_SEED_X> <P1_SEED_Y> <...>\n"
-                , argv[0]);
+        printf("Usage: %s <NUMBER_OF_THREADS> <P1_MAX_ITERS> <P1_SEED_X> "
+               "<P1_SEED_Y> <...>\n", argv[0]);
         exit(EXIT_SUCCESS);
     }
 
     if (argc < num_threads*3+2) {
-        printf("Usage: %s <NUMBER_OF_THREADS> <P1_MAX_ITERS> <P1_SEED_X> <P1_SEED_Y> <...>\n"
-                , argv[0]);
+        printf("Usage: %s <NUMBER_OF_THREADS> <P1_MAX_ITERS> <P1_SEED_X> "
+               "<P1_SEED_Y> <...>\n", argv[0]);
         exit(EXIT_SUCCESS);
     }
 
@@ -49,8 +48,9 @@ int main(int argc, char *argv[]) {
     }
 
     for (tnum=0; tnum<num_threads; tnum++) {
-        printf("Read from the command line for thread(%d): %lld %d %d\n", tnum
-                , tinfo[tnum].maxiter , tinfo[tnum].seedx, tinfo[tnum].seedy);
+        printf("Read from the command line for thread(%d): %lld %d %d\n",
+                tnum, tinfo[tnum].maxiter, 
+                tinfo[tnum].seedx, tinfo[tnum].seedy);
     }
 
     /* run threads: multiple steps */
@@ -60,14 +60,34 @@ int main(int argc, char *argv[]) {
         handle_error_en(status, "pthread_attr_init");
     }
 
+    /* first inquire on the current scope */
+    if (pthread_attr_getscope(&attr, &scope) != 0) {
+        fprintf(stderr, "Unable to get scheduling scope\n"); 
+    } else { 
+        if (scope == PTHREAD_SCOPE_PROCESS) {
+            printf("PTHREAD_SCOPE_PROCESS\n"); 
+        } else if (scope == PTHREAD_SCOPE_SYSTEM) {
+            printf("PTHREAD_SCOPE_SYSTEM\n"); 
+        } else {
+            fprintf(stderr, "Illegal scope value.\n"); 
+        }
+    } 
+
+    /* set the scheduling algorithm to PCS or SCS */ 
+    if (pthread_attr_setscope(&attr, PTHREAD_SCOPE_SYSTEM) != 0) {
+        fprintf(stderr, 
+                "Unable to set scheduling scope as PTHREAD_SCOPE_SYSTEM\n");
+    }
 
     /* Create one thread for set of parameters */
     for (tnum = 0; tnum < num_threads; tnum++) {
-        tinfo[tnum].thread_num = tnum;
+        /* to index tinfo array for data sharing */
+        tinfo[tnum].thread_num = tnum; 
 
-        /* The pthread_create() call stores the thread ID into corresponding element 
-         * of tinfo[] */
-        status = pthread_create(&tinfo[tnum].thread_id, &attr, &piworker, &tinfo[tnum]);
+        /* The pthread_create() call stores the thread ID into corresponding 
+         * element of tinfo[] */
+        status = pthread_create(&tinfo[tnum].thread_id, 
+                                &attr, &piworker, &tinfo[tnum].thread_num);
         if (status != 0) {
             handle_error_en(status, "pthread_create");
         }
@@ -86,8 +106,8 @@ int main(int argc, char *argv[]) {
             handle_error_en(status, "pthread_join");
         }
 
-        printf("Joined with thread %d; returned value was %lf\n", tinfo[tnum].thread_num, 
-            *((double *)res));
+        printf("Joined with thread %d; returned value was %lf\n", 
+               tinfo[tnum].thread_num, *((double *)res));
         free(res);      /* Free memory allocated by thread */
     }
 
