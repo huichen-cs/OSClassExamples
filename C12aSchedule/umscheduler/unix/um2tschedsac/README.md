@@ -9,7 +9,7 @@ in user mode using UNIX APIs:
 
 The program demonstrates we can use a timer to switch threads to CPU
 preemptively. For the version that uses the signal handler function, see
-[../um2tschedshc](um2tschedshc).
+[../um2tschedshc](../um2tschedshc).
 
 
 In this example, note that algorithm the sigction function has the prototype
