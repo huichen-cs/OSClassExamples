@@ -21,7 +21,7 @@ int main() {
 	const int SIZE = 4096;
 
 	/* name of the shared memory object */
-	const char *name = "OS";
+	const char *name = "OS1";
 
 	/* strings written to shared memory */
 	const char *message_0 = "Hello";
