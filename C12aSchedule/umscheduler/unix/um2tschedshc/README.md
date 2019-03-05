@@ -8,5 +8,5 @@ in user mode using UNIX APIs:
 
 The program demonstrates we can use a timer to switch threads to CPU
 preemptively. This is a complete version of the example in the directory
-[../um2tschedshs](um2tschedshs).
+[../um2tschedshs](../um2tschedshs).
 
