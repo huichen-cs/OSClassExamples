@@ -34,7 +34,7 @@ childFunc(void *arg)
    if (NULL == msgbuf) errExit("c: malloc");
 
    int nbytes = read(readfd, msgbuf, msglen);
-   if (-1 == nbytes) errExit("c: read");
+   if (-1 == nbytes || nbytes > msglen) errExit("c: read");
    msgbuf[nbytes + 1] = '\0';
    printf("Child: message content = %s\n", msgbuf);
 
@@ -94,7 +94,7 @@ main(int argc, char *argv[])
    if (NULL == msgbuf) errExit("p: malloc");
 
    int nbytes = read(pipefd[2], msgbuf, msglen);
-   if (-1 == nbytes) errExit("p: read");
+   if (-1 == nbytes || nbytes > msglen) errExit("p: read");
    msgbuf[nbytes + 1] = '\0';
    printf("p: message content = %s\n", msgbuf);
 
