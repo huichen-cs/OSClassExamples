@@ -1,6 +1,6 @@
-# Multithread $\pi$ Estimator
+# Multithread &pi; Estimator
 
-This program estimates $\pi$ using a Monte Carlo simulation parallelized
+This program estimates &pi; using a Monte Carlo simulation parallelized
 via threads. 
 
 - The version in this directory uses `random_r` for pseudo random number
