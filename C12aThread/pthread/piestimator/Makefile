@@ -1,5 +1,6 @@
 all: piestimator
 
+CC=gcc
 CFLAGS=-Wall -c
 LFLAGS=-lpthread
 
@@ -26,9 +27,9 @@ clean:
 
 testbegin:
 ifeq ("$(wildcard /usr/bin/time)","")
-	@echo "The time util is not found."
-	@echo "Run 'apt-get install time' to install time."
-	@exit 1
+	@echo "The time util is not found.";
+	@echo "Run 'apt-get install time' to install time.";
+	@exit 1;
 else
-	@echo "Test begin"
+	@echo "Test begin";
 endif

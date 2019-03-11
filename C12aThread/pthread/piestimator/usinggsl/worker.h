@@ -1,12 +1,16 @@
 #ifndef __PI_WORKER__
 #define __PI_WORKER__
 
+#include <gsl/gsl_rng.h>
+
 struct thread_info {
     pthread_t thread_id;        /* ID returned by pthread_create() */
     int       thread_num;       /* Application-defined thread # */
     long long maxiter;
     int       seedx;
     int       seedy;
+    gsl_rng   *rngx;
+    gsl_rng   *rngy;
     long long accepted;
 };
 

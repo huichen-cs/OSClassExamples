@@ -6,6 +6,8 @@
 #include <errno.h>
 #include <ctype.h>
 
+#include <gsl/gsl_rng.h>
+
 #include "worker.h"
 
 struct thread_info *tinfo;
@@ -41,10 +43,15 @@ int main(int argc, char *argv[]) {
         handle_error("calloc");
     }
 
+    gsl_rng_env_setup();    
     for (tnum=0; tnum<num_threads; tnum++) {
         sscanf(argv[2+3*tnum], "%lld", &(tinfo[tnum].maxiter)); 
         sscanf(argv[2+3*tnum+1], "%d", &(tinfo[tnum].seedx));
         sscanf(argv[2+3*tnum+2], "%d", &(tinfo[tnum].seedy));
+        tinfo[tnum].rngx = gsl_rng_alloc(gsl_rng_default);
+        tinfo[tnum].rngy = gsl_rng_alloc(gsl_rng_default);
+        gsl_rng_set(tinfo[tnum].rngx, tinfo[tnum].seedx);
+        gsl_rng_set(tinfo[tnum].rngy, tinfo[tnum].seedy);
     }
 
     for (tnum=0; tnum<num_threads; tnum++) {
@@ -119,7 +126,12 @@ int main(int argc, char *argv[]) {
     pi = (double)totalaccepted / (double)trials * 4.0;
     printf("In parent: estimated pi = %lf\n", pi);
 
+    for (tnum=0; tnum<num_threads; tnum++) {
+        gsl_rng_free(tinfo[tnum].rngx);
+        gsl_rng_free(tinfo[tnum].rngy);
+    }
     free(tinfo);
+    
     exit(EXIT_SUCCESS);
 }
 
