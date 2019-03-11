@@ -7,11 +7,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include <gsl/gsl_rng.h>
+
 #include "worker.h"
 extern struct thread_info *tinfo;
 
-static long long estimatepi(long long maxiters, unsigned int xseed, 
-                            unsigned yseed);
+static long long estimatepi(long long maxiters, gsl_rng *rngx,
+                            gsl_rng *rngy);
 
 void *piworker(void *param) {
     int tnum = *(int *)param;
@@ -20,13 +22,15 @@ void *piworker(void *param) {
     long long maxiter = tinfo[tnum].maxiter;
     int seedx = tinfo[tnum].seedx;
     int seedy = tinfo[tnum].seedy;
+    gsl_rng *rngx = tinfo[tnum].rngx;
+    gsl_rng *rngy = tinfo[tnum].rngy;
 
-    printf("\tthread at pid = %d and tid = %lu with appid = %d\n"
+    printf("\tthread at pid = %ld and tid = %lu with appid = %d\n"
            "\tmaxiter = %lld seedx = %d seedy = %d\n",
-           getpid(), tinfo[tnum].thread_id, tinfo[tnum].thread_num, 
+           (long)getpid(), (long)tinfo[tnum].thread_id, tinfo[tnum].thread_num, 
            maxiter, seedx, seedy);
 
-    accepted = estimatepi(maxiter, seedx, seedy);
+    accepted = estimatepi(maxiter, rngx, rngy);
     tinfo[tnum].accepted = accepted;
 
     pi = malloc(sizeof(double));
@@ -35,8 +39,8 @@ void *piworker(void *param) {
 }
 
 
-static long long estimatepi(long long maxiters, unsigned int xseed, 
-                            unsigned yseed) {
+static long long estimatepi(long long maxiters, gsl_rng *rngx, 
+                            gsl_rng *rngy) {
     /* 
      * A simple Monte Carlo method: 
      *
@@ -61,25 +65,11 @@ static long long estimatepi(long long maxiters, unsigned int xseed,
     long long iter;
     long long accepted = 0;
 
-    struct random_data xbuf;
-    struct random_data ybuf;
-    char xstate[256];
-    char ystate[256];
-
     double pi;
 
-    initstate_r(xseed, xstate, sizeof(xstate), &xbuf);
-    initstate_r(yseed, ystate, sizeof(ystate), &ybuf);
     for (iter=0; iter<maxiters; iter++) {
-        int32_t rn;
-
-        setstate_r(xstate, &xbuf);
-        random_r(&xbuf, &rn);
-        x = ((double)rn) / ((double)(RAND_MAX) + 1.); 
-
-        setstate_r(ystate, &ybuf);
-        random_r(&ybuf, &rn);        
-        y = ((double)rn) / ((double)(RAND_MAX) + 1.);
+        x = gsl_rng_uniform(rngx);
+        y = gsl_rng_uniform(rngy);
 
         if (x*x + y*y < 1.0) {
             accepted ++;
@@ -87,7 +77,7 @@ static long long estimatepi(long long maxiters, unsigned int xseed,
     }
 
     pi = (double)accepted / (double)maxiters * 4.0;
-    printf("\tworker at pid=%d: accepted = %lld pi = %lf\n", getpid(), 
+    printf("\tworker at pid=%ld: accepted = %lld pi = %lf\n", (long)getpid(), 
            accepted, pi);
 
     return accepted;
