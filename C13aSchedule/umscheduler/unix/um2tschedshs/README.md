@@ -1,4 +1,4 @@
-# User Model Thread Scheduler
+# User Mode Thread Scheduler
 
 This program demonstrates the mechanism to schedule two threads running
 in user mode using UNIX APIs:
