@@ -8,6 +8,8 @@
 #include <sys/types.h>
 #include <signal.h>
 
+#include "printctx.h"
+
 /* stack size for scheduler and user threads */
 static const long STACK_SIZE = (1 << 14);
 
@@ -18,7 +20,6 @@ static void run_scheduler();
 static void make_timerhandler_context();
 static void timeraction(int signum, siginfo_t *siginfo, void *ucontext);
 static void dispatcher();
-static void print_ucontext(siginfo_t *siginfo, ucontext_t *ucontext);
 
 /* two user threads, the "hello user" and the "hello world" threads */
 static void *hu_stack;
@@ -40,7 +41,7 @@ static void cleanup() {
     free(hu_stack);
     free(hw_stack);
     free(timerhandler_stack);
-    printf("Exiting the program ...\n");
+    printf("\tNo more threads to schedule. Exiting the program ...\n");
 }
 
 int main(int argc, char* argv[]) {
@@ -48,21 +49,27 @@ int main(int argc, char* argv[]) {
 
     /* make timerhandler context */
     make_timerhandler_context();
+    printf("\tInitialized timer interrupt handler context.\n");
+    print_ucontext(NULL, &timerhandler_context);
 
     /* prepare contexts for two user threads running two functions
      * concurrently */
     make_hu_context();
     hu_exited = 0;
+    printf("\tInitialized the 'hello user' thread context.\n");
+    print_ucontext(NULL, &hu_context);
 
     make_hw_context();
     hw_exited = 0;
+    printf("\tInitialized the 'hello world' thread context.\n");
+    print_ucontext(NULL, &hw_context);
 
 
     /* prepare timerhandler to run as a timer handler */
     struct sigaction sigact;
 
     sigemptyset(&sigact.sa_mask);
-    sigact.sa_flags = SA_SIGINFO;
+    sigact.sa_flags = SA_RESTART | SA_SIGINFO;
     sigact.sa_sigaction = timeraction;
     sigaction(SIGALRM, &sigact, NULL);
 
@@ -72,9 +79,12 @@ int main(int argc, char* argv[]) {
     itv.it_interval.tv_usec = NS_TO_FIRE_TIMER;
     itv.it_value = itv.it_interval;
     setitimer(ITIMER_REAL, &itv, NULL);
+    printf("\tSet up timer that is to fire every %ld nanoseconds\n", 
+            NS_TO_FIRE_TIMER);
 
 
     /* activate the first context */
+    printf("\tNow starting the scheduler.\n");
     run_scheduler();
 
     return 0;
@@ -87,7 +97,7 @@ static void hu_stub() {
 
 
 static void hello_user() {
-    for (int i=0; i<100; i++) {
+    for (int i=0; i<4; i++) {
         printf("[%03d]: Hello, User!\n", i);
         fflush(stdout);
         usleep(500000);
@@ -100,7 +110,7 @@ static void hw_stub() {
 }
 
 static void hello_world() {
-    for (int i=0; i<10; i++) {
+    for (int i=0; i<2; i++) {
         printf("[%03d]: Hello, World!\n", i);
         fflush(stdout);
         usleep(500000);
@@ -151,36 +161,30 @@ static void make_hw_context() {
 
 /* thread scheduler consists of the timerhandler and the dispatcher */
 static void timeraction(int signum, siginfo_t *siginfo, void *ucontext) {
+    printf("\tEntering timer interrupt handler: time slice expired. "
+           "Invoke scheduler ...\n");
     print_ucontext(siginfo, (ucontext_t *)ucontext);
     swapcontext(active_context, &timerhandler_context);
     /* the active_context allows the thread to returns to previous active 
      * thread since when the active_conetxt is activated, it will resume
      * execution from right here */
+    printf("\tExiting timer interrupt handler ...\n");
 }
 
 static void dispatcher() {
+    if (hu_exited && hw_exited) {
+        printf("\tDispatcher: both hu and hw threads exited\n");
+        return;
+    }
     if (active_context == (&hu_context) && !hw_exited) {
         active_context = &hw_context;
+        printf("\tDispatcher: selected hw thread to run\n");
     } else if (active_context == (&hw_context) && !hu_exited) {
         active_context = &hu_context;
+        printf("\tDispatcher: selected hu thread to run\n");
     } 
+    printf("\tDispatcher: dispatch the thread to CPU\n");
+    print_ucontext(NULL, active_context);
     setcontext(active_context);
 }
 
-static void print_ucontext(siginfo_t *si, ucontext_t *uc) {
-    printf("-------------------------------------------\n");
-    printf("The (incomplete) user context in timeraction:\n");
-    printf("\tSignal number: %d\n", si->si_signo);
-    printf("\n");
-    printf("\tRegister RIP:  %llx\n", uc->uc_mcontext.gregs[REG_RIP]);
-    printf("\tRegister RAX:  %llx\n", uc->uc_mcontext.gregs[REG_RAX]);
-    printf("\tRegister RSP:  %llx\n", uc->uc_mcontext.gregs[REG_RSP]);
-    printf("\tRegister RBP:  %llx\n", uc->uc_mcontext.gregs[REG_RBP]);
-    printf("\tRegister RAX:  %llx\n", uc->uc_mcontext.gregs[REG_RAX]);
-    printf("\tRegister RBX:  %llx\n", uc->uc_mcontext.gregs[REG_RBX]);
-    printf("\tRegister RCX:  %llx\n", uc->uc_mcontext.gregs[REG_RCX]);
-    printf("\tRegister RDX:  %llx\n", uc->uc_mcontext.gregs[REG_RDX]);
-    printf("\tRegister RSI:  %llx\n", uc->uc_mcontext.gregs[REG_RSI]);
-    printf("\tRegister RDI:  %llx\n", uc->uc_mcontext.gregs[REG_RDI]);
-    printf("-------------------------------------------\n");
-}
