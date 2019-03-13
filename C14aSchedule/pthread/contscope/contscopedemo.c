@@ -44,7 +44,7 @@ int main(int argc, char *argv[]) {
    } else if (scope == PTHREAD_SCOPE_SYSTEM) {
        printf("The default contention scope is PTHREAD_SCOPE_SYSTEM\n"); 
        if (change) {
-           if (pthread_attr_setscope(&attr, PTHREAD_SCOPE_SYSTEM) != 0) {
+           if (pthread_attr_setscope(&attr, PTHREAD_SCOPE_PROCESS) != 0) {
                fprintf(stderr, "Failed to set scope as PTHREAD_SCOPE_PROCESS\n");
            } else {
                printf("Successfully set scope as PTHREAD_SCOPE_PROCESS\n");
