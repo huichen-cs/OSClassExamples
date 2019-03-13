@@ -80,7 +80,8 @@ static void *runner(void *param) {
    pid_t ppid = getppid();
    pid_t pid = getpid();
    pthread_t tid = pthread_self();
-   printf("ppid = %ld pid = %ld tid = %ld\n", (long)ppid, (long)pid, (long)tid);
+   printf("ppid = %lu pid = %lu tid = %lu\n", (unsigned long)ppid, 
+          (unsigned long)pid, (unsigned long)tid);
    pthread_exit(0); 
 } 
 
