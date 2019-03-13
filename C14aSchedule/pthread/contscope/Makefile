@@ -1,9 +1,9 @@
-all: scheduledemo
+all: contscopedemo
 
 CFLAGS=-Wall 
 
-scheduledemo: scheduledemo.o
-	$(CC) -o scheduledemo scheduledemo.o -lpthread
+contscopedemo: contscopedemo.o
+	$(CC) -o contscopedemo contscopedemo.o -lpthread
 
 clean:
-	$(RM) scheduledemo scheduledemo.o
+	$(RM) contscopedemo contscopedemo.o

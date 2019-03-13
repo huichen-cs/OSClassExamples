@@ -4,17 +4,22 @@
  *  concepts. Wiley, 2018
  */
 
-#include <pthread.h> 
 #include <stdio.h> 
+#include <unistd.h>
+#include <pthread.h> 
 
 #define NUM_THREADS 5 
 
 static void *runner(void *param);
 
 int main(int argc, char *argv[]) { 
-   int i, scope;
+   int i, scope, change = 0;
    pthread_t tid[NUM_THREADS]; 
    pthread_attr_t attr; 
+
+   if (argc > 1) {
+       change = 1;
+   }
 
    /* get the default attributes */ 
    pthread_attr_init(&attr); 
@@ -22,18 +27,34 @@ int main(int argc, char *argv[]) {
    /* first inquire on the current scope */
    if (pthread_attr_getscope(&attr, &scope) != 0) {
       fprintf(stderr, "Unable to get scheduling scope\n"); 
-   } else { 
-      if (scope == PTHREAD_SCOPE_PROCESS) {
-         printf("PTHREAD_SCOPE_PROCESS\n"); 
-      } else if (scope == PTHREAD_SCOPE_SYSTEM) {
-         printf("PTHREAD_SCOPE_SYSTEM\n"); 
-      } else {
-         fprintf(stderr, "Illegal scope value.\n"); 
-      }
    } 
+   
 
+   
    /* set the scheduling algorithm to PCS or SCS */ 
-   pthread_attr_setscope(&attr, PTHREAD_SCOPE_SYSTEM); 
+   if (scope == PTHREAD_SCOPE_PROCESS) {
+       printf("The default contention scope is PTHREAD_SCOPE_PROCESS\n"); 
+       if (change && pthread_attr_setscope(&attr, PTHREAD_SCOPE_SYSTEM) != 0) {
+           fprintf(stderr, "Failed to set scope as PTHREAD_SCOPE_SYSTEM\n");
+       } else {
+           printf("Successfully set scope as PTHREAD_SCOPE_SYSTEM\n");
+       }
+   } else if (scope == PTHREAD_SCOPE_SYSTEM) {
+       printf("The default contention scope is PTHREAD_SCOPE_SYSTEM\n"); 
+       if (change && pthread_attr_setscope(&attr, PTHREAD_SCOPE_SYSTEM) != 0) {
+           fprintf(stderr, "Failed to set scope as PTHREAD_SCOPE_PROCESS\n");
+       } else {
+           printf("Successfully set scope as PTHREAD_SCOPE_PROCESS\n");
+       }
+   } else {
+       fprintf(stderr, "Illegal scope value.\n"); 
+       if (change && pthread_attr_setscope(&attr, PTHREAD_SCOPE_SYSTEM) != 0) {
+           fprintf(stderr, "Failed to set scope as PTHREAD_SCOPE_SYSTEM\n");
+       } else {
+           printf("Successfully set scope as PTHREAD_SCOPE_SYSTEM\n");
+       }
+   }
+
 
    /* create the threads */
    for (i = 0; i < NUM_THREADS; i++) {
@@ -50,6 +71,10 @@ int main(int argc, char *argv[]) {
 /* Each thread will begin control in this function */ 
 static void *runner(void *param) { 
    /* do some work ... */ 
+   pid_t ppid = getppid();
+   pid_t pid = getpid();
+   pthread_t tid = pthread_self();
+   printf("ppid = %ld pid = %ld tid = %ld\n", (long)ppid, (long)pid, (long)tid);
    pthread_exit(0); 
 } 
 
