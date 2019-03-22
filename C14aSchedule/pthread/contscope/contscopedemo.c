@@ -34,24 +34,30 @@ int main(int argc, char *argv[]) {
    /* set the scheduling algorithm to PCS or SCS */ 
    if (scope == PTHREAD_SCOPE_PROCESS) {
        printf("The default contention scope is PTHREAD_SCOPE_PROCESS\n"); 
-       if (change && pthread_attr_setscope(&attr, PTHREAD_SCOPE_SYSTEM) != 0) {
-           fprintf(stderr, "Failed to set scope as PTHREAD_SCOPE_SYSTEM\n");
-       } else {
-           printf("Successfully set scope as PTHREAD_SCOPE_SYSTEM\n");
+       if (change) {
+           if (pthread_attr_setscope(&attr, PTHREAD_SCOPE_SYSTEM) != 0) {
+               fprintf(stderr, "Failed to set scope as PTHREAD_SCOPE_SYSTEM\n");
+           } else {
+               printf("Successfully set scope as PTHREAD_SCOPE_SYSTEM\n");
+           }
        }
    } else if (scope == PTHREAD_SCOPE_SYSTEM) {
        printf("The default contention scope is PTHREAD_SCOPE_SYSTEM\n"); 
-       if (change && pthread_attr_setscope(&attr, PTHREAD_SCOPE_SYSTEM) != 0) {
-           fprintf(stderr, "Failed to set scope as PTHREAD_SCOPE_PROCESS\n");
-       } else {
-           printf("Successfully set scope as PTHREAD_SCOPE_PROCESS\n");
+       if (change) {
+           if (pthread_attr_setscope(&attr, PTHREAD_SCOPE_PROCESS) != 0) {
+               fprintf(stderr, "Failed to set scope as PTHREAD_SCOPE_PROCESS\n");
+           } else {
+               printf("Successfully set scope as PTHREAD_SCOPE_PROCESS\n");
+           }
        }
    } else {
        fprintf(stderr, "Illegal scope value.\n"); 
-       if (change && pthread_attr_setscope(&attr, PTHREAD_SCOPE_SYSTEM) != 0) {
-           fprintf(stderr, "Failed to set scope as PTHREAD_SCOPE_SYSTEM\n");
-       } else {
-           printf("Successfully set scope as PTHREAD_SCOPE_SYSTEM\n");
+       if (change) {
+           if (pthread_attr_setscope(&attr, PTHREAD_SCOPE_SYSTEM) != 0) {
+               fprintf(stderr, "Failed to set scope as PTHREAD_SCOPE_SYSTEM\n");
+           } else {
+               printf("Successfully set scope as PTHREAD_SCOPE_SYSTEM\n");
+           }
        }
    }
 
@@ -74,7 +80,8 @@ static void *runner(void *param) {
    pid_t ppid = getppid();
    pid_t pid = getpid();
    pthread_t tid = pthread_self();
-   printf("ppid = %ld pid = %ld tid = %ld\n", (long)ppid, (long)pid, (long)tid);
+   printf("ppid = %lu pid = %lu tid = %lu\n", (unsigned long)ppid, 
+          (unsigned long)pid, (unsigned long)tid);
    pthread_exit(0); 
 } 
 

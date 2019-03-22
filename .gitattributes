@@ -11,6 +11,7 @@
 *.s text
 *.sh text
 *.md text
+Makefile.* text
 Makefile text
 
 # Declare files that will always have CRLF line endings on checkout.
