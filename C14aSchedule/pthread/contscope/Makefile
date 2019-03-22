@@ -1,5 +1,6 @@
 all: contscopedemo
 
+CC=gcc
 CFLAGS=-Wall 
 
 contscopedemo: contscopedemo.o
