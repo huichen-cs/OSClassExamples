@@ -10,7 +10,8 @@
 static void cleanup();
 static void docleanup();
 
-static const int SERVER_PORT = 61234;
+static const char *SERVER_ADDR = "127.0.0.1";
+static const int   SERVER_PORT =       61234;
 
 static int cfd = -1;
 
@@ -34,9 +35,9 @@ int main(int argc, char *argv[]) {
     }
 
     saddr.sin_family = AF_INET;
-    saddr.sin_port = SERVER_PORT;
-    if (0 == inet_pton(AF_INET, "127.0.0.1", &saddr.sin_addr)) {
-        fprintf(stderr, "cannot convert 127.0.0.1 to IP address\n");
+    saddr.sin_port = htons(SERVER_PORT);
+    if (0 == inet_pton(AF_INET, SERVER_ADDR, &saddr.sin_addr)) {
+        fprintf(stderr, "cannot convert %s to IP address\n", SERVER_ADDR);
         exit(EXIT_FAILURE);
     }
     if (-1 == connect(cfd, (struct sockaddr *)&saddr, sizeof(saddr))) {
