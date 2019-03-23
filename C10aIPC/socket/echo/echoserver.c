@@ -12,8 +12,9 @@ static void print_net_msg(char *msgprefix, struct sockaddr_in *addr);
 static void cleanup();
 static void docleanup(int signum);
 
-static const int SERVER_PORT = 61234;
-const int BACKLOG     =     5;
+static const char *SERVER_ADDR  = "0.0.0.0";
+static const int   SERVER_PORT  =     61234;
+static const int   BACKLOG      =         5;
 
 static int sfd = -1, cfd = -1;
 
@@ -41,8 +42,12 @@ int main(int argc, char *argv[]) {
     }
 
     saddr.sin_family = AF_INET;
-    saddr.sin_port = SERVER_PORT;
-    memset(&saddr.sin_addr, '\0', sizeof(saddr.sin_addr));
+    saddr.sin_port = htons(SERVER_PORT);
+    if (0 == inet_pton(AF_INET, SERVER_ADDR, &(saddr.sin_addr.s_addr))) {
+        fprintf(stderr, "%s isn't valid IP address\n", SERVER_ADDR);
+        exit(EXIT_FAILURE);
+    }
+
     if (-1 == bind(sfd, (struct sockaddr *)&saddr, sizeof(saddr))) {
         perror("bind");
         exit(EXIT_FAILURE);
@@ -56,7 +61,8 @@ int main(int argc, char *argv[]) {
     printf("server at process %d is ready to accept another connection.\n", 
             getpid());
 
-    while ((cfd = accept(sfd, (struct sockaddr *)&caddr, &caddrlen) >= 0)) {
+    caddrlen = sizeof(struct sockaddr_in);
+    while ((cfd = accept(sfd, (struct sockaddr *)&caddr, &caddrlen)) >= 0) {
         if (-1 == cfd) {
             perror("accept");
             ret = EXIT_FAILURE;
@@ -95,6 +101,7 @@ int main(int argc, char *argv[]) {
         } 
         printf("server at process %d is ready to accept another connection.\n",
                 getpid());
+        caddrlen = sizeof(struct sockaddr_in);
     }
 
     return ret;
@@ -113,6 +120,6 @@ static void docleanup(int signum) {
 
 static void print_net_msg(char *msgprefix, struct sockaddr_in *addr) {
     char str[INET_ADDRSTRLEN];
-    inet_ntop(AF_INET, &addr->sin_addr, str, INET_ADDRSTRLEN);
-    printf("%s %s:%d\n", msgprefix, str, addr->sin_port);
+    inet_ntop(AF_INET, &(addr->sin_addr), str, INET_ADDRSTRLEN);
+    printf("%s %s:%d\n", msgprefix, str, ntohs(addr->sin_port));
 }
