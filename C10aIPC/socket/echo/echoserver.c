@@ -12,17 +12,15 @@ static void print_net_msg(char *msgprefix, struct sockaddr_in *addr);
 static void cleanup();
 static void docleanup(int signum);
 
-static const char *SERVER_ADDR  = "0.0.0.0";
-static const int   SERVER_PORT  =     61234;
-static const int   BACKLOG      =         5;
+static const char *SERVER_ADDR = "0.0.0.0";
+static const int   SERVER_PORT =     61234;
+static const int   BACKLOG     =         5;
 
 static int sfd = -1, cfd = -1;
 
 int main(int argc, char *argv[]) {
+    pid_t pid;
     int ret = EXIT_SUCCESS, 
-        sfd,
-        cfd, 
-        pid,
         bytesreceived;
     socklen_t caddrlen;
     struct sockaddr_in saddr, caddr;
@@ -58,7 +56,7 @@ int main(int argc, char *argv[]) {
         exit(EXIT_FAILURE);
     }
     print_net_msg("server is listening to", &saddr);
-    printf("server at process %d is ready to accept another connection.\n", 
+    printf("server at process %d is ready to accept connection.\n", 
             getpid());
 
     caddrlen = sizeof(struct sockaddr_in);
