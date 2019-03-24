@@ -1,4 +1,3 @@
-#include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -14,16 +13,16 @@ static void cleanup();
 static void docleanup(int signum);
 static void *clientwrapper(void *arg);
 static int handleclient(int cfd);
+static int process_create(pid_t *pid, void *(*handleclient)(void *), void *arg);
 
 static const char *SERVER_ADDR = "0.0.0.0";
 static const int   SERVER_PORT =     61234;
 static const int   BACKLOG     =         5;
 
 static int sfd = -1, cfd = -1;
-static pthread_attr_t tattr;
 
 int main(int argc, char *argv[]) {
-    pthread_t tid;
+    pid_t pid;
     int ret = EXIT_SUCCESS;
     socklen_t caddrlen;
     struct sockaddr_in saddr, caddr;
@@ -34,11 +33,6 @@ int main(int argc, char *argv[]) {
     atexit(cleanup);
     sigact.sa_handler = docleanup;
     sigaction(SIGINT, &sigact, NULL);
-
-    if (0 != pthread_attr_init(&tattr)) {
-        fprintf(stderr, "pthread_attr_init error\n");
-        exit(EXIT_FAILURE);
-    }
 
     sfd = socket(AF_INET, SOCK_STREAM, 0);
     if (-1 == sfd) {
@@ -75,13 +69,13 @@ int main(int argc, char *argv[]) {
         }
         print_net_msg("server accepted connection from", &caddr);
 
-        if (0 != pthread_create(&tid, &tattr, clientwrapper, &cfd)) {
-            fprintf(stderr, "pthread_create failed\n");
+        if (0 != process_create(&pid, clientwrapper, &cfd)) {
+            fprintf(stderr, "failed to create a process to handle a client\n");
             ret = EXIT_FAILURE;
             break;
         }
-        printf("server created thread %lu to handle the incoming client\n", 
-                tid);
+        printf("server created process %d to handle the incoming client\n", 
+                pid);
         printf("server at process %d is ready to accept another connection.\n",
                 getpid());
         caddrlen = sizeof(struct sockaddr_in);
@@ -90,18 +84,34 @@ int main(int argc, char *argv[]) {
     return ret;
 }
 
+static int process_create(pid_t *pid, void *(*client)(void *), void *arg) {
+    int cfd = *((int *)arg);
+    *pid = fork();
+    if (-1 == *pid) {
+        perror("fork");
+        return EXIT_FAILURE;
+    } else if (*pid == 0) { /* child */
+        close(sfd); /* not used by the child */
+        client(&cfd);
+    } 
+
+    return EXIT_SUCCESS;
+}
+
 static void *clientwrapper(void *arg) {
     int cfd = *((int *)arg);
     int ret = handleclient(cfd);
-    pthread_exit(ret);
+    exit(ret);
 }
+
 
 static int handleclient(int cfd) {
     pid_t pid = getpid();
     int bytesreceived;
     char buf[128];
 
-    printf("thread %lu @ process %d is handling client\n", pthread_self(), pid);
+    printf("process %d is handling client\n", pid);
+    pid = getpid(); /* child's pid */
     while(1) {
         bytesreceived = recv(cfd, buf, sizeof(buf)-1, 0);
         if (-1 == bytesreceived) {
@@ -109,27 +119,23 @@ static int handleclient(int cfd) {
             return EXIT_FAILURE;
         }
         buf[bytesreceived] = '\0';
-        printf("received from client at thread %lu @ process %d: %s\n", 
-                pthread_self(), getpid(), buf);
+        printf("received from client at process %d: %s\n", pid, buf);
         if (-1 == send(cfd, buf, bytesreceived, MSG_NOSIGNAL)) {
             perror("send");
             return EXIT_FAILURE;
         } 
-        printf("echoed back to client at thread %lu @ process %d: %s\n", 
-                pthread_self(), getpid(), buf);
+        printf("echoed back to client at process %d: %s\n", pid, buf);
         if (strncasecmp(buf, "Bye!", 4) == 0) {
             break;
         }
     }
-    printf("client said 'Bye!', and thread %lu @ process %d exiting ...\n", 
-            pthread_self(), getpid());
+    printf("client said 'Bye!', and process %d exiting ...\n", pid);
     return EXIT_SUCCESS;
 }
 
 static void cleanup() {
     if (sfd >=0) close(sfd);
     if (cfd >=0) close(cfd);
-    pthread_attr_destroy(&tattr);
     printf("server at process %d cleaned up and exiting ...\n", getpid());
 }
 
