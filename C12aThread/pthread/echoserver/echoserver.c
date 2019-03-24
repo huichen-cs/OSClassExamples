@@ -92,8 +92,8 @@ int main(int argc, char *argv[]) {
 
 static void *clientwrapper(void *arg) {
     int cfd = *((int *)arg);
-    int ret = handleclient(cfd);
-    pthread_exit(ret);
+    handleclient(cfd);
+    pthread_exit(NULL);
 }
 
 static int handleclient(int cfd) {
