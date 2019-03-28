@@ -4,7 +4,7 @@ CFLAGS=-Wall -c
 LFLAGS=-lpthread
 
 readwritedrive: readwritedrive.o readwrite.o 
-	$(CC) $(LFLAGS) readwritedrive.o readwrite.o -o readwrite
+	$(CC) readwritedrive.o readwrite.o -o readwrite $(LFLAGS) 
 	
 readwritedrive.o: readwritedrive.c
 	$(CC) $(CFLAGS) readwritedrive.c 
