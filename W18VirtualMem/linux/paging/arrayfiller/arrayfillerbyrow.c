@@ -3,27 +3,40 @@
  * usage of a program, e.g.,
  *  ps -o size,rss YOUR_PID
  *  pmap -d YOUR_PID
+ *  ps -o min_flt,maj_flt YOUR_PID
+ *  top -d 1
  */
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
 #include <sys/user.h>
+#include <sys/time.h>
+#include <sys/resource.h>
+#include <sys/mman.h>
 
-void print_page_fault_stat(int pid);
+#define array(r, c) *(array + r*ncols + c)
+static void print_page_fault_stat(int pid);
+
 
 int main(int argc, char *argv[]) {
-    int nrows = PAGE_SIZE/sizeof(int);
-    int ncols = PAGE_SIZE/sizeof(int);
-    int a[nrows][ncols];
+    int nrows = PAGE_SIZE/sizeof(int), 
+        ncols = PAGE_SIZE/sizeof(int);
+    int *array;
 
-    printf("PAGE_SIZE = %d\n a = %d x %d = %ld pages\n", 
-            (int)PAGE_SIZE, nrows, ncols, sizeof(a)/PAGE_SIZE);
+    printf("nrows = %d ncols = %d\n", nrows, ncols);
+    array = (int *)malloc(nrows * ncols * sizeof(int));
+    if (NULL == array) {
+        perror("malloc");
+        exit(EXIT_FAILURE);
+    }
 
     for(int i=0; i<nrows; i++) {
         for(int j=0; j<ncols; j++) {
-            a[i][j] = 0;
+            array(i, j) = 0;
         }
     }
+
+    free(array);
 
     print_page_fault_stat(getpid());
 

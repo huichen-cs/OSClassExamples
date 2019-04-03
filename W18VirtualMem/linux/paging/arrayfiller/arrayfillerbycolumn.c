@@ -12,28 +12,29 @@
 #include <sys/resource.h>
 #include <sys/mman.h>
 
-void print_page_fault_stat(int pid);
-static int  a[1024][1024];
+#define array(r, c) *(array + r*ncols + c)
+static void print_page_fault_stat(int pid);
+
 
 int main(int argc, char *argv[]) {
     int nrows = PAGE_SIZE/sizeof(int), 
         ncols = PAGE_SIZE/sizeof(int);
-    struct rlimit rlim;
+    int *array;
 
     printf("nrows = %d ncols = %d\n", nrows, ncols);
-
-    rlim.rlim_cur = PAGE_SIZE*1;
-    rlim.rlim_max = PAGE_SIZE*1;
-    if (-1 == setrlimit(RLIMIT_DATA, &rlim)) {
-        perror("setrlimit");
+    array = (int *)malloc(nrows * ncols * sizeof(int));
+    if (NULL == array) {
+        perror("malloc");
         exit(EXIT_FAILURE);
     }
 
     for(int j=0; j<ncols; j++) {
         for(int i=0; i<nrows; i++) {
-            a[i][j] = 0;
+            array(i, j) = 0;
         }
     }
+
+    free(array);
 
     print_page_fault_stat(getpid());
 
