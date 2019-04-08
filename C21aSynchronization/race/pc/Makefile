@@ -1,4 +1,4 @@
-all: producerconsumer producerconsumer.s
+all: producerconsumer producerconsumer.s producerconsumer.lst
 
 CFLAGS=-Wall
 
@@ -9,9 +9,13 @@ producerconsumer.o: producerconsumer.c buffer.h
 	$(CC) $(CFLAGS) -c producerconsumer.c
 
 producerconsumer.s: producerconsumer.c
-	$(CC) -fverbose-asm -S producerconsumer.c 
+	$(CC) -S -fverbose-asm -g -O2 producerconsumer.c 
+
+producerconsumer.lst: producerconsumer.s
+	$(AS) -alhnd producerconsumer.s > producerconsumer.lst
 
 
 
 clean:
-	$(RM) producerconsumer producerconsumer.o producerconsumer.s
+	$(RM) producerconsumer producerconsumer.o \
+		producerconsumer.s producerconsumer.lst
