@@ -107,7 +107,7 @@ static void producer() {
     }
 
 
-    for (i=0; i<100; i++) {
+    for (i=0; i<NUM_PRODUCED; i++) {
         /* produce an item in next produced */ 
         int nextproduced = i;
 	
@@ -116,6 +116,7 @@ static void producer() {
 	    bufptr->buffer[bufptr->in] = nextproduced; 
 	    bufptr->in = (bufptr->in + 1) % BUFFER_SIZE; 
 	    bufptr->counter ++; 
+        printf("In process(%d): counter = %d\n", getpid(), bufptr->counter);
     }
 }
 
@@ -141,15 +142,16 @@ static void consumer() {
         exit(EXIT_FAILURE);
     }
 
-    sum = 0;
-    for (i=0; i<100; i++) {
+    sum = 0; 
+    for (i=0; i<NUM_PRODUCED; i++) {
 	    while (bufptr->counter == 0)
 		    ; /* do nothing */
 	    nextconsumed = bufptr->buffer[bufptr->out];
 	    bufptr->out = (bufptr->out + 1) % BUFFER_SIZE;
         bufptr->counter--;
+        printf("In process(%d): counter = %d\n", getpid(), bufptr->counter);
 	    /* consume the item in next consumed */
-        sum += nextconsumed;
+        sum += nextconsumed; 
     }
 
     printf("The sum is %d\n", sum);
