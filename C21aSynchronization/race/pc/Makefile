@@ -3,16 +3,16 @@ all: producerconsumer producerconsumer.s producerconsumer.lst
 CFLAGS=-Wall
 
 producerconsumer: producerconsumer.o
-	$(CC) -o producerconsumer producerconsumer.o -lrt
+	$(CC) -O0 -o producerconsumer producerconsumer.o -lrt
 
 producerconsumer.o: producerconsumer.c buffer.h
 	$(CC) $(CFLAGS) -c producerconsumer.c
 
 producerconsumer.s: producerconsumer.c
-	$(CC) -S -fverbose-asm -g -O2 producerconsumer.c 
+	$(CC) -S -fverbose-asm -g -O0 producerconsumer.c 
 
 producerconsumer.lst: producerconsumer.s
-	$(AS) -alhnd producerconsumer.s > producerconsumer.lst
+	$(AS) -o /dev/null -alhnd producerconsumer.s > producerconsumer.lst
 
 
 
