@@ -22,6 +22,12 @@ int main(int argc, char *argv[]) {
 
     printf("In parent (pid = %d)\n", getpid());
 
+    bufptr = initbuffer();
+    if (NULL == bufptr) {
+        fprintf(stderr, "Failed to initbuffer()\n");
+        exit(EXIT_FAILURE);
+    }
+
     for (int i=0; i<2 && !ischild; i++) {
         workers[i] = fork();
         if (-1 == workers[i]) {
@@ -32,13 +38,7 @@ int main(int argc, char *argv[]) {
         if (workers[i] == 0) ischild = 1;
     }
 
-    if (!ischild) {
-        bufptr = initbuffer();
-        if (NULL == bufptr) {
-            fprintf(stderr, "Failed to initbuffer()\n");
-            exit(EXIT_FAILURE);
-        }
-    } else if (ischild) {
+    if (ischild) {
         printf("In child %d (pid = %d)\n", childno, getpid());
         switch (childno) {
             case 1: 
@@ -51,7 +51,6 @@ int main(int argc, char *argv[]) {
         printf("Leaving child %d (pid = %d)\n", childno, getpid());
         exit(EXIT_SUCCESS); 
     }
-
 
     for (int i=0; i<2; i++) {
         waitpid(workers[i], &wstatus, 0);
@@ -81,29 +80,43 @@ static sharedbuffer_t *initbuffer() {
         return NULL;
     }
 
-    bufptr = (sharedbuffer_t *)mmap(0, sizeof(sharedbuffer_t), PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
+    bufptr = (sharedbuffer_t *)mmap(0, sizeof(sharedbuffer_t), 
+                                    PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
     if ((sharedbuffer_t *)-1 == bufptr) {
         perror("mmap");
         return NULL;
     }
 
-
-
-    bufptr->counter = 0;
     bufptr->in = 0;
     bufptr->out = 0;
 
-    rtn = sem_init(&bufptr->countersem, 1, 1);
+    rtn = sem_init(&bufptr->mutex, 1, 1);
     if (-1 == rtn) {
         perror("sem_init");
         return NULL;
     }
+
+    rtn = sem_init(&bufptr->empty, 1, BUFFER_SIZE);
+    if (-1 == rtn) {
+        perror("sem_init");
+        return NULL;
+    }
+
+    rtn = sem_init(&bufptr->full, 1, 0);
+    if (-1 == rtn) {
+        perror("sem_init");
+        return NULL;
+    }
+
+
     return bufptr;
 }
 
 static void closebuffer(sharedbuffer_t *bufptr) {
     if (NULL != bufptr) {
-        sem_destroy(&bufptr->countersem);
+        sem_destroy(&bufptr->mutex);
+        sem_destroy(&bufptr->empty);
+        sem_destroy(&bufptr->full);
     }
     shm_unlink(shname);        
 }
@@ -129,15 +142,22 @@ static void producer() {
     for (i=0; i<NUM_PRODUCED; i++) {
         /* produce an item in next produced */ 
         int nextproduced = i;
+
+        sem_wait(&bufptr->empty);
+        sem_wait(&bufptr->mutex);
     
-        while (bufptr->counter == BUFFER_SIZE)  
-            ; /* do nothing (busy waiting) */ 
         bufptr->buffer[bufptr->in] = nextproduced; 
         bufptr->in = (bufptr->in + 1) % BUFFER_SIZE; 
-        sem_wait(&bufptr->countersem);
-        bufptr->counter ++; 
-        sem_post(&bufptr->countersem);
-        printf("In process(%d): counter = %d\n", getpid(), bufptr->counter);
+
+        int mutex, empty, full;
+        sem_getvalue(&bufptr->mutex, &mutex);
+        sem_getvalue(&bufptr->empty, &empty),
+        sem_getvalue(&bufptr->full, &full);
+        printf("In process(%d): (i, mutex, empty, full) = (%d, %d, %d, %d)\n", 
+                getpid(), i, mutex, empty, full);
+
+        sem_post(&bufptr->mutex);
+        sem_post(&bufptr->full);
     }
 }
 
@@ -157,7 +177,8 @@ static void consumer() {
         exit(EXIT_FAILURE);
     }
 
-    bufptr = (sharedbuffer_t *)mmap(0, sizeof(sharedbuffer_t), PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
+    bufptr = (sharedbuffer_t *)mmap(0, sizeof(sharedbuffer_t), 
+                                    PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
     if ((sharedbuffer_t *)-1 == bufptr) {
         perror("mmap");
         exit(EXIT_FAILURE);
@@ -165,14 +186,23 @@ static void consumer() {
 
     sum = 0; 
     for (i=0; i<NUM_PRODUCED; i++) {
-        while (bufptr->counter == 0)
-            ; /* do nothing */
+        sem_wait(&bufptr->full);
+        sem_wait(&bufptr->mutex);
+
         nextconsumed = bufptr->buffer[bufptr->out];
         bufptr->out = (bufptr->out + 1) % BUFFER_SIZE;
-        sem_wait(&bufptr->countersem);
-        bufptr->counter --;
-        sem_post(&bufptr->countersem);
-        printf("In process(%d): counter = %d\n", getpid(), bufptr->counter);
+
+        int mutex, empty, full;
+        sem_getvalue(&bufptr->mutex, &mutex);
+        sem_getvalue(&bufptr->empty, &empty),
+        sem_getvalue(&bufptr->full, &full);
+        printf("In process(%d): (i, mutex, empty, full) = (%d, %d, %d, %d)\n", 
+                getpid(), i, mutex, empty, full);
+
+
+        sem_post(&bufptr->mutex);
+        sem_post(&bufptr->empty);
+
         /* consume the item in next consumed */
         sum += nextconsumed; 
     }
