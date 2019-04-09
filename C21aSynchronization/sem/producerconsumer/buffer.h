@@ -7,8 +7,9 @@ typedef struct sharedbuffer {
     int buffer[BUFFER_SIZE];
     int in;
     int out;
-    int counter;
-    sem_t countersem;
+    sem_t empty;
+    sem_t mutex;
+    sem_t full;
 } sharedbuffer_t;
 
 #endif
