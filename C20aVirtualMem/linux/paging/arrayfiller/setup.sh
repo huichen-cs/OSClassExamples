@@ -8,7 +8,7 @@ fi
 
 
 if [ $# -lt 1 ]; then 
-   numofpages=32
+   numofpages=64
 else
    numofpages=$1
 fi
