@@ -1,8 +1,11 @@
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.locks.Condition;
 
 public class ProducerConsumer {
     private final ReentrantLock lock = new ReentrantLock();
+    private final Condition fullCond = lock.newCondition();
+    private final Condition emptyCond = lock.newCondition();
 
     public static void main(String[] args) {
         ProducerConsumer pc =  new ProducerConsumer();
@@ -39,15 +42,19 @@ public class ProducerConsumer {
         public void run() {
             int count = 0;
             running.set(true);
-            while(running.get()) {
-                while (running.get() && buffer != 0) ;  /* buffer full ... */
-                lock.lock();
-                try {
-                    buffer = ++ count; /* produce an item, insert to buffer */
-                } finally {
-                    lock.unlock();
+            try {
+                while(running.get()) {
+                    lock.lock();
+                    while (buffer != 0) 
+                        fullCond.await(); /* buffer full, wait ... */
+                    try {
+                        buffer = ++ count; /* produce and insert to buffer */
+                    } finally {
+                        emptyCond.signal();
+                        lock.unlock();
+                    }
                 }
-            }
+            } catch (InterruptedException e) { }
         }
     }
 
@@ -66,16 +73,21 @@ public class ProducerConsumer {
         public void run() {
             int item = 0;
             sum = 0;
-            for (int i=0; i<max; i++) {
-                while (buffer == 0) ; /* buffer empty, busy waiting */
-                lock.lock();
-                try {
-                    item = buffer;
-                    buffer = 0;
-                } finally {
-                    lock.unlock();
+            try {
+                for (int i=0; i<max; i++) {
+                    lock.lock();
+                    while (buffer == 0) 
+                        emptyCond.await();
+                    try {
+                        item = buffer;
+                        buffer = 0;
+                    } finally {
+                        fullCond.signal();
+                        lock.unlock();
+                    }
+                    sum += item;
                 }
-                sum += item;
+            } catch (InterruptedException e) {
             }
         }
     }
