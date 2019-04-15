@@ -4,8 +4,8 @@ public class ProducerConsumer {
 
     private BoundedBuffer<Integer> buffer;
 
-    private Producer producer;
-    private Consumer consumer;
+    private Producer<Integer> producer;
+    private Consumer<Integer> consumer;
 
     private int item;
     private int sum;
