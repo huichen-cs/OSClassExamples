@@ -1,3 +1,4 @@
-# Example Programs for Operating Systems
+# Example Programs for Operating Systems Classes
 
-These are example programs for CISC 3320 Operating Systems at Brooklyn College of the City University of New York. 
+These are example programs Operating Systems classes (CISC 3320 and CISC 7310X) at Brooklyn College of the City University of New York. The reference
+to these examples is the insturctor's lecture notes.
