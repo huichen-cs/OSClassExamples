@@ -1,4 +1,19 @@
 [org 0x7c00]
+
+; Keybaord interrupt is maskable. To Intel 8259 Programmable Interrupt
+; Controller, the IRQ number of the keyboard interrupt is 1, which
+; means if we were to mask the interrupt, we set the 1st bit of the
+; mask (a byte) as 1, i.e, 0x02 (0000 0010 in binary). 
+;
+; For interrupt request number assignment on PC, see 
+; https://en.wikibooks.org/wiki/X86_Assembly/Programmable_Interrupt_Controller
+;
+; Uncomment the following two statements, and run the code. Does
+; the keyboard interrupt work now? 
+; 
+; mov al, 0x02
+; out 21h, al
+
 jmp START
 
 KBD_ISR:
@@ -43,7 +58,7 @@ KBD_ISR:
     
 
 START:
-    ; Set interrupt 0x16 (or 21 in decimal)'s interrupt
+    ; Set interrupt number 0x16 (or 21 in decimal)'s interrupt
     ; service routine as ours. For interrupt 0x16, see
     ;   https://en.wikipedia.org/wiki/INT_16H
     cli
