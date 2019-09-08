@@ -1,7 +1,7 @@
 ; print a byte in register cl to hex assuming ASCII encoding
 ;    void * print_byte(char c) 
 print_byte:
-    pusha
+    pusha ; Push AX, CX, DX, BX, original SP, BP, SI, and DI.
 
     mov ch, cl
     shr ch, 4
