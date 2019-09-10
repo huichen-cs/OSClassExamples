@@ -6,7 +6,7 @@ load1.bin: load1.asm print_msg.asm
 load2.bin: load2.asm print_byte.asm
 	nasm -f bin load2.asm -o $@
 
-load3.bin: load3.asm print_mem.asm print_byte.asm print_space.asm print_line.asm
+load3.bin: load3.asm read_disk.asm print_mem.asm print_byte.asm print_space.asm print_line.asm
 	nasm -f bin load3.asm -o $@
 
 %.bin: %.asm
