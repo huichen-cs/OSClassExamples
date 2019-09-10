@@ -67,11 +67,31 @@ START:
     mov es, ax
     mov ax, KBD_ISR
     mov [es:21*4], ax
+    ; mov ax, 0
+    ; mov [es:21*4+2], ax
     mov [es:21*4+2], cs
     sti
 
+    ; print interrupt vector
+    mov ax, cs
+    mov cl, ah
+    call print_byte
+    call print_space
+    mov cl, al
+    call print_byte
+    call print_space
+    mov ax, KBD_ISR
+    mov cl, ah
+    call print_byte
+    call print_space
+    mov cl, al
+    call print_byte
+    call print_space
+
     jmp $
 
+%include "../load/print_byte.asm"
+%include "../load/print_space.asm"
 
 POS:
     db 0, 0, 0, 0
