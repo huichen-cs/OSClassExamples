@@ -1,7 +1,7 @@
 ; we implement a function with interface
-;     void print_msg(char* msg)
+;     void main_print_msg(char* msg)
 ; where we pass the argument msg via ds:bx
-print_msg:
+main_print_msg:
     pusha           ; push all registers to stack
     mov ah, 0x0e
 .LOOP:

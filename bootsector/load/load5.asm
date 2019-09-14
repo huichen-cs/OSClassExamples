@@ -103,20 +103,7 @@ ANNOUNCEMENT:
     db "New program starts...", 0
 
 
-main_print_msg:
-    pusha           ; push all registers to stack
-    mov ah, 0x0e
-.LOOP:
-    mov al, [ds:bx]
-    cmp al, 0
-    je .DONE_PRINT_MSG
-    int 0x10
-    inc bx
-    jmp .LOOP
-.DONE_PRINT_MSG:
-    popa            ; pop all registers to stack
-    ret
-
+%include "main_print_msg.asm"
 
 times 1024-($-$$) db 0
 times 512 db 0
