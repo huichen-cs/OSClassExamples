@@ -1,22 +1,27 @@
 [org 0x7c00]
 
-mov bp, 0x9000
+; set up real-mode stack
+mov bp, 0x9000  
 mov sp, bp
 
+; print a message in real mode
 mov bx, MSG_REAL_MODE
 call print_msg_rm
 
+; switch to protected mode
 call switch_to_pm
 
+; we will never return here if the above is successful
 jmp $
 
 %include "print_msg_rm.asm"
 %include "gdt0.asm"
 %include "print_msg_pm.asm"
-%include "switchpm.asm"
+%include "switchpm.asm"     ; begin_pm is a callback, and to be called therein
 
 [bits 32]
-begin_pm:
+main_pm:
+    ; do something useful, such as, print a message in protected mode
     mov ebx, MSG_PROT_MODE
     call print_msg_pm
 
