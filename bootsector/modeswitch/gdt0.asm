@@ -84,8 +84,12 @@ gdt:
 .gdt_end:
 
 
-gdt_descriptor:
-    dw gdt.gdt_end - gdt - 1
+GDT_DESCRIPTOR: ; to be loaded by instruction lgdt
+    ; The size is the size of the table subtracted by 1. This is because the
+    ; maximum value of size is 65535, while the GDT can be up to 65536 bytes (a
+    ; maximum of 8192 entries). Further no GDT can have a size of 0. 
+    dw gdt.gdt_end - gdt - 1    
+    ; The offset is the linear address of the table itself
     dd gdt
     
 
