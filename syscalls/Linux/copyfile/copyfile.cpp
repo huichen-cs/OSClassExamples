@@ -54,7 +54,7 @@ static void exit_if_failed(char *pathname, int fd) {
             << errno << " and error message: "
             << strerror(errno) 
             << std::endl;
-        exit(5);
+        exit(EXIT_FAILURE);
     }
 }
 
@@ -66,7 +66,7 @@ static void exit_if_failed(char *srcpathname, char *dstpathname, int status) {
             << errno << " and error message: "
             << strerror(errno) 
             << std::endl;
-        exit(5);
+        exit(EXIT_FAILURE);
     }
 }
 
