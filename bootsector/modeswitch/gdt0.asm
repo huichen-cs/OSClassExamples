@@ -1,4 +1,6 @@
-; https://wiki.osdev.org/Global_Descriptor_Table
+; See https://wiki.osdev.org/Global_Descriptor_Table
+;     and
+;     https://www.intel.com/content/www/us/en/architecture-and-technology/64-ia-32-architectures-software-developer-vol-3a-part-1-manual.html
 ; a simple flat Global Descriptor Table (GDT)
 gdt:
 
@@ -38,7 +40,7 @@ gdt:
     ;   G    = 1 -> offset is in unit 4K (2^12 bytes)
     ;   D/B  = 1 -> 1 for 32-bit segment; 0 for 16-bit
     ;   L    = 0 -> 64-bit code segment? 0 for not, ununsed on 32-bit processor
-    ;   AVL  = 0 -> 
+    ;   AVL  = 0 -> Not available to system programmers
     ;   Segment Limit (bits 19:16) = 1111
     db 0b11001111 ; 2nd flags , Limit ( bits 16 -19)
     db 0x00 ; bits 24 - 31 of segment base of 32bits
@@ -76,7 +78,7 @@ gdt:
     ;   G    = 1 -> offset is in unit 4K (2^12 bytes)
     ;   D/B  = 1 -> 1 for 32-bit segment; 0 for 16-bit
     ;   L    = 0 -> 64-bit code segment? 0 for not, ununsed on 32-bit processor
-    ;   AVL  = 0 -> 
+    ;   AVL  = 0 -> Not available to system programmers
     ;   Segment Limit (bits 19:16) = 1111
     db 0b11001111   ; 
     db 0x00         ; base (bits 24 - 31)
