@@ -87,3 +87,64 @@ in [avg.x](avg.x).
 ./ravg localhost 1 2 3
 ```
 
+## RPC Service Maintenance
+
+### Killing the RPC Service Process (the Callee)
+We can use the kill command to terminate the RPC service process, such as, 
+if the service process id is 12345, we do
+```
+kill 12345
+```
+Alternatively, we can use the killall command to terminate the services
+matching the program name, i.e., 
+```
+killall avg_svc
+```
+
+### Unregistering RPC Service
+A RPC service registration remains in the system unless explicitly removed
+even if we terminate the process that associate with it. Observe the
+following commands and outputs:
+```
+$ ./avg_svc &
+[1] 4153
+$ ./ravg localhost 1 2 3
+value   = 1.000000e+00
+value   = 2.000000e+00
+value   = 3.000000e+00
+average = 2.000000e+00
+$ killall avg_svc
+$ /usr/sbin/rpcinfo
+   program version netid     address                service    owner
+     22855    1    udp       0.0.0.0.164.39         -          unknown
+     22855    1    tcp       0.0.0.0.178.39         -          unknown
+$ ./ravg localhost 1 2 3
+value   = 1.000000e+00
+value   = 2.000000e+00
+value   = 3.000000e+00
+call failed:: RPC: Unable to receive; errno = Connection refused
+Segmentation fault
+$
+```
+
+To unregistering the RPC service, we do
+```
+sudo /usr/sbin/rpcinfo -d 22855 1 
+```
+
+Notice if we run the client program again, we observe a different 
+error message, such as, 
+```
+$ ./ravg localhost 1 2 3
+value   = 1.000000e+00
+value   = 2.000000e+00
+value   = 3.000000e+00
+localhost: RPC: Program not registered
+$
+```
+
+If we run the `rpcinfo` command again, we shall see the RPC serve is 
+no long appear in the registered RPC service list. 
+
+
+
