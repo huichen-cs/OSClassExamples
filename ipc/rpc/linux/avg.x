@@ -7,7 +7,7 @@
 const MAXAVGSIZE  = 200;
 
 struct input_data {
-  double input_data<200>;
+  double input_data<MAXAVGSIZE>;
 };
 
 typedef struct input_data input_data;

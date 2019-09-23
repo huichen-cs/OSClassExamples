@@ -1,11 +1,11 @@
-#include <rpc/rpc.h>
-#include "avg.h"
 #include <stdio.h>
+#include <rpc/rpc.h>
+
+#include "avg.h"
 
 static double sum_avg;
 
-double * average_1(input_data *input,
-   CLIENT *client) {
+double * average_1(input_data *input, CLIENT *client) {
 
   double *dp = input->input_data.input_data_val;
   u_int i;
@@ -18,8 +18,7 @@ double * average_1(input_data *input,
   return(&sum_avg);
 }
 
-double * average_1_svc(input_data *input,
-   struct svc_req *svc) {
+double * average_1_svc(input_data *input, struct svc_req *svc) {
   CLIENT *client;
   return(average_1(input,client));
 }
