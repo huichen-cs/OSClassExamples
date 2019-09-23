@@ -8,7 +8,7 @@
 #include <sys/socket.h>
 
 static void cleanup();
-static void docleanup();
+static void docleanup(int signum);
 
 static const char *SERVER_ADDR = "127.0.0.1";
 static const int   SERVER_PORT =       61234;
