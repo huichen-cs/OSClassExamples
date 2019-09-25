@@ -31,6 +31,8 @@ void averageprog_1( char* host, int argc, char *argv[])
    result_1 = average_1(&average_1_arg, clnt);
    if (result_1 == NULL) {
       clnt_perror(clnt, "call failed:");
+      clnt_destroy( clnt );
+      exit(2);
    }
    clnt_destroy( clnt );
    printf("average = %e\n",*result_1);
@@ -42,7 +44,8 @@ int main( int argc, char* argv[])
    char *host;
 
    if(argc < 3) {
-     printf("usage: %s server_host value ...\n", argv[0]); exit(1);
+     printf("usage: %s server_host value ...\n", argv[0]); 
+     exit(1);
    }
    if (argc > MAXAVGSIZE + 2) {
       printf("Two many input values\n");
@@ -50,4 +53,5 @@ int main( int argc, char* argv[])
    }
    host = argv[1];
    averageprog_1( host, argc, argv);
+   exit (0);
 }
