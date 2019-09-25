@@ -1,3 +1,8 @@
+/**
+ * Revised based on the sample code in 
+ *   Silberschatz, Abraham, Greg Gagne, and Peter B. Galvin. Operating system
+ *   concepts. Wiley, 2018.
+ */
 import java.util.concurrent.*;
 
 class Summation implements Callable<Integer> {
