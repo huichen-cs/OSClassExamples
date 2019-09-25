@@ -12,7 +12,6 @@
 #include <sys/mman.h>
 
 int main() {
-
 	/* the size (in bytes) of shared memory object */
 	const int SIZE = 4096;
 
@@ -23,7 +22,7 @@ int main() {
 	int fd;
 
 	/* pointer to shared memory obect */
-	char *ptr;
+	int *ptr;
 
 	/* open the shared memory object */
 	fd = shm_open(name, O_RDWR, 0666);
@@ -33,14 +32,14 @@ int main() {
 	} 
 
 	/* memory map the shared memory object */
-	ptr = (char *)mmap(0, SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
-	if ((char *)-1 == ptr) {
+	ptr = (int *)mmap(0, SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
+	if ((int *)-1 == ptr) {
 		perror("mmap");
 		exit(EXIT_FAILURE);
 	}
 
 	/* read from the shared memory object */
-	printf("%s",(char *)ptr);
+	printf("%d",*ptr);
 
 	/* remove the shared memory object */
 	shm_unlink(name);

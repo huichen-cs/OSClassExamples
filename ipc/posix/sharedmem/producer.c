@@ -21,17 +21,19 @@ int main() {
 	const int SIZE = 4096;
 
 	/* name of the shared memory object */
-	const char *name = "OS1";
+	const char *name = "OS";
 
 	/* strings written to shared memory */
+/*
 	const char *message_0 = "Hello";
 	const char *message_1 = "World!";
+*/
 
 	/* shared memory file descriptor */
 	int fd, rtn;
 
 	/* pointer to shared memory obect */
-	char *ptr;
+	int *ptr;
 
 	/* create the shared memory object */
 	fd = shm_open(name,O_CREAT | O_RDWR,0666);
@@ -48,17 +50,20 @@ int main() {
 	}
 
 	/* memory map the shared memory object */
-	ptr = (char *) mmap(0, SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
-	if ((char *)-1 == ptr) {
+	ptr = (int *) mmap(0, SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
+	if ((int *)-1 == ptr) {
 		perror("mmap");
 		exit(EXIT_FAILURE);
 	}
 
 	/* write to the shared memory object */
+    *ptr = 12345;
+/*
 	sprintf(ptr,"%s",message_0);
 	ptr += strlen(message_0);
 	sprintf(ptr,"%s",message_1);
 	ptr += strlen(message_1);
+*/
 
 	return 0;
 }
