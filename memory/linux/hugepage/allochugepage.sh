@@ -35,3 +35,6 @@ fi
 echo "The huge page allocation are as follows:"
 grep -i "Hugepage" /proc/meminfo
 
+time LD_PRELOAD=/usr/lib/i386-linux-gnu/libhugetlbfs-2.20.so HUGETLB_MORECORE=yes ./worker 4096 2
+
+time ./worker 4096 2
