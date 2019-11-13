@@ -2,13 +2,14 @@
 #include <stdlib.h>
 #include <time.h>
 
-int maxiters = 10000;
+int maxiters = 1000;
 static void computeOnBuf(int size, int *buf);
 
 int main(int argc, char *argv[]) {
     int hugepagesize;
     int numhugepages;
-    int size, *buf = NULL;
+    size_t size;    
+    int *buf = NULL;
     clock_t t0, t1;
 
     if (argc < 3) {    
@@ -24,7 +25,7 @@ int main(int argc, char *argv[]) {
     printf("\tHugepage size:    %d KB\n", hugepagesize);
     printf("\tNum of Hugepages: %d pages\n", numhugepages);
 
-    size = hugepagesize*numhugepages;
+    size = hugepagesize*numhugepages*1024;
     buf = (int*)malloc(size);
     if (buf == NULL) {
         fprintf(stderr, "\tFailed to allocate %d bytes to the buf array.", 
@@ -51,7 +52,7 @@ static void computeOnBuf(int size, int *buf) {
             buf[i] = i + 1;
         }
 
-        for (int i=0; i<size; i++) {
+        for (int i=0; i<size; i+=1024) {
             buf[i] = buf[i]*buf[i];
         }
 
