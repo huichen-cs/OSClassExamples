@@ -21,7 +21,8 @@ int main(int argc, char *argv[]) {
         ncols = PAGE_SIZE/sizeof(int);
     int *array;
 
-    printf("nrows = %d ncols = %d\n", nrows, ncols);
+    printf("this process: pid = %d\n", getpid());
+    printf("array size: nrows = %d ncols = %d\n", nrows, ncols);
     array = (int *)malloc(nrows * ncols * sizeof(int));
     if (NULL == array) {
         perror("malloc");
