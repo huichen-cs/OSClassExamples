@@ -95,10 +95,10 @@ public class MainViewController {
 				}
 			}
 			progressProperty.set(0f);
-			copyingInfoLabel.setText("Copying canceled");
-			if (dstFilePath != null && Files.exists(dstFilePath)) {
-				Files.delete(dstFilePath);
-			}
+//			copyingInfoLabel.setText("Copying canceled");
+//			if (dstFilePath != null && Files.exists(dstFilePath)) {
+//				Files.delete(dstFilePath);
+//			}
 		} catch (IOException e) {
 			LOGGER.error("Cannot close channels.", e);
 			// TODO: notify users. may quit.
@@ -268,7 +268,7 @@ public class MainViewController {
 			
 			
 			if (filePosition == fileSize) {
-				Platform.runLater(() -> setUIForNextCopy("Copy compled"));
+				Platform.runLater(() -> setUIForNextCopy("Copy completed"));
 				close();
 			} else if (filePosition > fileSize) {
 				Platform.runLater(() -> setUIForNextCopy("Inconsistent copy, should never happen"));
