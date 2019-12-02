@@ -39,6 +39,7 @@ int main(int argc, char *argv[]) {
     print_page_fault_stat(pid);
     printf("page size = %d bytes pid = %d\n", pagesize, pid); 
 
+    printf("sleeping 60 seconds for you to examine the output ...");
     sleep(60);
     return 0;
 }
