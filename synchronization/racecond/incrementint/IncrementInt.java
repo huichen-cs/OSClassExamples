@@ -21,7 +21,8 @@ public class IncrementInt {
         ExecutorService executor = 
             Executors.newFixedThreadPool(THREAD_POOL_SIZE);
 
-        System.out.println("Ready to run threads");
+        System.out.println("Ready to run " + numOfThreads + " threads, " + 
+            "each of which calls service() 100000 times ...");
 
         for (Runnable runnable: serviceThreads) {
             executor.execute(runnable);
@@ -31,9 +32,9 @@ public class IncrementInt {
 
         while (!executor.isTerminated()); 
 
-        System.out.println(countOfServiceCalled);
-        System.out.println(nextThreadId);
-        System.out.println(sum);
+        System.out.println("countOfServiceCalled = " + countOfServiceCalled);
+        System.out.println("nextThreadId = " + nextThreadId);
+        System.out.println("sum = " + sum);
     }
     
     private static void service() {
