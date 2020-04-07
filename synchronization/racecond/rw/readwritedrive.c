@@ -46,9 +46,10 @@ int main(int argc, char *argv[]) {
     for (i = 0; i < 2; i++) { 
         tinfo[i].thread_num = i;
         tinfo[i].item = itemptr;
-        /* The pthread_create() call stores the thread ID into corresponding element 
-         * of tinfo[] */
-        status = pthread_create(&tinfo[i].thread_id, &attr, &readwrite, &tinfo[i]);
+        /* The pthread_create() call stores the thread ID into corresponding 
+         * element of tinfo[] */
+        status = pthread_create(&tinfo[i].thread_id, &attr, &readwrite, 
+                                &tinfo[i]);
         if (status != 0) {
             handle_error_en(status, "The producer thread pthread_create'd");
         }
@@ -67,8 +68,9 @@ int main(int argc, char *argv[]) {
             handle_error_en(status, "Thread pthread_join'ed");
         }
 
-        printf("Joined with thread %d; returned value was %lf\n", tinfo[i].thread_num, 
-            *((double *)res));
+        printf("Joined with thread %d; returned value was %lf\n", 
+               tinfo[i].thread_num, 
+               *((double *)res));
     }
 
     printf("item = %d\n", *itemptr);
