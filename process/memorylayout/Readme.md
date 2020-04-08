@@ -28,7 +28,7 @@ We can turn off ASLR using the `systcl` command or changing the `/proc` file dir
 #### Using `sysctl`
 To disable ASLR temporarily on the Linux system using the `sysctl` command, issue the following command as root or using sudo,
 ```
-sysctl -w kernel.randomize_va_space=0
+/usr/sbin/sysctl -w kernel.randomize_va_space=0
 ```
 where "temporarily" means that this setting won't survive a system  reboot. 
 
@@ -48,10 +48,10 @@ where "temporarily" means that this setting won't survive a system  reboot.
 
 To disable it permanently, i.e., to disable it and allow the setting to survive after a system reboot, we can place a configuration file in the `/etc/sysctl.d` directory, e.g., we run the `sysctl` command as root,
 ```
-sysctl kernel.randomize_va_space > /etc/sysctl.d/01_disable_aslr.conf
+/usr/sbin/sysctl kernel.randomize_va_space > /etc/sysctl.d/01_disable_aslr.conf
 ```
 or using `sudo`,
 ```
-sysctl kernel.randomize_va_space | sudo tee /etc/sysctl.d/01_disable_aslr.conf
+/usr/sbin/sysctl kernel.randomize_va_space | sudo tee /etc/sysctl.d/01_disable_aslr.conf
 ```
 
