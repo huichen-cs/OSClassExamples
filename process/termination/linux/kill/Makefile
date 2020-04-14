@@ -7,4 +7,4 @@ killprocess: killprocess.o
 
 
 clean:
-	$(RM) -f killprocess.o  killprocess
+	$(RM) killprocess.o  killprocess

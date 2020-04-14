@@ -7,4 +7,4 @@ fatalsignaled: fatalsignaled.o
 
 
 clean:
-	$(RM) -f fatalsignaled.o fatalsignaled
+	$(RM) fatalsignaled.o fatalsignaled
