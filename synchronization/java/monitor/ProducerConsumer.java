@@ -2,6 +2,13 @@
  * This is a minor revision of the sample program in page 138,
  *  Andrew S. Tanenbaum and Herbert Bos. 2014. Modern Operating Systems (4th
  *  ed.). Prentice Hall Press, Upper Saddle River, BUFFER_SIZEJ, USA. 
+ *
+ * For Java synchronized method, take a look at
+ *   https://docs.oracle.com/javase/tutorial/essential/concurrency/syncmeth.html
+ * 
+ * For Object.notify() and Object.wait() methods, take a look at
+ *   https://www.baeldung.com/java-wait-notify
+ * 
  */
 import java.util.concurrent.atomic.AtomicBoolean;
 /* import java.util.Random; */
