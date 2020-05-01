@@ -1,0 +1,20 @@
+#!/bin/bash
+
+if [ $# -lt 2 ]; then
+	echo "Usage: $0 PID1 PID2"
+	exit 1
+fi
+
+function get_frame_list() {
+	./pagetable $1 | head -n-3 | cut -d' ' -f4 > $2
+}
+
+f1=$(tempfile)
+f2=$(tempfile)
+trap "rm -f -- '$f1' '$f2'" EXIT
+
+get_frame_list $1 ${f1}
+get_frame_list $2 ${f2}
+cat ${f1} ${f2} | sort | uniq -c | sort -n -k1,1
+
+
