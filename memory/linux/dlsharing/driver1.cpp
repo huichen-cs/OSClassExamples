@@ -15,6 +15,6 @@ int main() {
 	cout << "rv2=" << rv2 << endl;
 	cout << "DotProduct(rv1,rv2)=" << p << endl;
 
-	sleep (360);
+	sleep (3600);
 	return 0;
 }
