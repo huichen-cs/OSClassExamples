@@ -1,0 +1,60 @@
+#!/bin/bash
+
+prefix=https://raw.githubusercontent.com/huichen-cs/OSClassExamples/master/memory/linux/
+ptfiles=(pagetable/pagetable.c \
+	pagetable/countframes \
+	pagetable/Makefile \
+	pagetable/pagetable.c)
+
+for f in ${ptfiles[@]}; do
+	echo -n "downloading ${f} ..."
+	wget -c -q ${prefix}/${f}
+	if [ $? -eq 0 ]; then
+		echo "done"
+	else
+		echo "failed"
+	fi
+done
+
+dlfiles=(dlsharing/Makefile \
+	dlsharing/vector.h \
+	dlsharing/driver1.cpp \
+	dlsharing/driver2.cpp \
+	dlsharing/vector.cpp)
+
+mkdir -p dlsharing
+cd dlsharing
+for f in ${dlfiles[@]}; do
+	echo -n "downloading ${f} ..."
+	wget -c -q ${prefix}/${f}
+	if [ $? -eq 0 ]; then
+		echo "done"
+	else
+		echo "failed"
+	fi
+done
+make
+cd -
+
+make
+
+./dlsharing/driver1 &
+d1pid=$!
+./dlsharing/driver2 &
+d2pid=$!
+
+LD_LIBRARY_PATH=./dlsharing ./dlsharing/driver1dl &
+d1dlpid=$!
+LD_LIBRARY_PATH=./dlsharing ./dlsharing/driver2dl &
+d2dlpid=$!
+
+sleep 1
+echo "driver1's pid" ${d1pid}
+echo "driver2's pid" ${d2pid}
+echo "driver1dl's pid" ${d1dlpid}
+echo "driver2dl's pid" ${d2dlpid}
+
+
+
+
+
