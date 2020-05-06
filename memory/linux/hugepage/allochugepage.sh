@@ -22,7 +22,9 @@ echo "You can have at most ${maxnumofhugepages} huge pages."
 threshold=0.6
 isok=`echo "${numhugepages} >= ${threshold}*${maxnumofhugepages}" | bc -l`
 if [ ${isok} -eq 1 ]; then 
-    echo "You requested ${numhugepages} huge pages, exceeding ${threshold} of free memory"
+    echo "You requested ${numhugepages} huge pages, exceeding free memory by the factor of ${threshold}"
+	echo "Rerun the command with a command line argument"
+	echo "Usage: $0 NUM_HUGE_PAGES"
     exit 1
 fi
 echo "You requested ${numhugepages} huge pages"
