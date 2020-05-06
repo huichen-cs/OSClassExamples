@@ -1,10 +1,39 @@
 #!/bin/bash
 
 prefix=https://raw.githubusercontent.com/huichen-cs/OSClassExamples/master/memory/linux/
+
 ptfiles=(pagetable/pagetable.c \
 	pagetable/countframes \
 	pagetable/Makefile \
 	pagetable/pagetable.c)
+
+dlfiles=(dlsharing/Makefile \
+	dlsharing/vector.h \
+	dlsharing/driver1.cpp \
+	dlsharing/driver2.cpp \
+	dlsharing/vector.cpp)
+
+workdir=$(pwd)
+echo "Working in directory $(workdir) ..."
+
+mkdir -p dlsharing
+echo "Created ${workdir}/dlsharing ..."
+cd dlsharing
+echo "Entered ${workdir}/dlsharing ..."
+for f in ${dlfiles[@]}; do
+	echo -n "downloading ${f} ..."
+	wget -c -q ${prefix}/${f}
+	if [ $? -eq 0 ]; then
+		echo "done"
+	else
+		echo "failed"
+	fi
+done
+echo "Compile the driver1, driver2, driver1dl, and driver2dl programs ..."
+make
+cd ${workdir}
+echo "Returned to ${workdir} ..."
+
 
 for f in ${ptfiles[@]}; do
 	echo -n "downloading ${f} ..."
@@ -16,28 +45,10 @@ for f in ${ptfiles[@]}; do
 	fi
 done
 
-dlfiles=(dlsharing/Makefile \
-	dlsharing/vector.h \
-	dlsharing/driver1.cpp \
-	dlsharing/driver2.cpp \
-	dlsharing/vector.cpp)
-
-mkdir -p dlsharing
-cd dlsharing
-for f in ${dlfiles[@]}; do
-	echo -n "downloading ${f} ..."
-	wget -c -q ${prefix}/${f}
-	if [ $? -eq 0 ]; then
-		echo "done"
-	else
-		echo "failed"
-	fi
-done
-make
-cd -
-
+echo "Compile the pagetable program ..."
 make
 
+echo "Run the programs ..."
 ./dlsharing/driver1 &
 d1pid=$!
 ./dlsharing/driver2 &
@@ -49,10 +60,12 @@ LD_LIBRARY_PATH=./dlsharing ./dlsharing/driver2dl &
 d2dlpid=$!
 
 sleep 1
-echo "driver1's pid" ${d1pid}
-echo "driver2's pid" ${d2pid}
-echo "driver1dl's pid" ${d1dlpid}
-echo "driver2dl's pid" ${d2dlpid}
+echo "driver1's pid is   ${d1pid}"
+echo "driver2's pid is   ${d2pid}"
+echo "driver1dl's pid is ${d1dlpid}"
+echo "driver2dl's pid is ${d2dlpid}"
+
+echo "You can now use the pagetable program to check their page tables"
 
 
 
