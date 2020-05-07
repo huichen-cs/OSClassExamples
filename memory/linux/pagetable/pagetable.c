@@ -32,9 +32,10 @@ int main(int argc, char *argv[]) {
 	
 	pageno = 0ull;
 	while (read(fd, &entry, 8) > 0) {
+		frameno = entry&0x003fffffffffffffull;
 		if (entry & 0x8000000000000000ull) {
 			printf("0x%016llx 0x%016llx 0x%16llx 0x%016llx\n", 
-				pageno, pageno << 12,  entry, entry&0x003fffffffffffffull);
+				pageno, pageno << 12,  entry, frameno);
 		}
 		pageno ++;
 	}
