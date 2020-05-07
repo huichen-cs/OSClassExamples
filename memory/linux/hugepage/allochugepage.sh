@@ -39,6 +39,7 @@ apt-get install -y x86info libhugetlbfs0 > /dev/null 2>&1
 
 make
 
-time LD_PRELOAD=/usr/lib/i386-linux-gnu/libhugetlbfs-2.20.so HUGETLB_MORECORE=yes ./worker 4096 2
+time LD_PRELOAD=/usr/lib/libhugetlbfs.so \
+  HUGETLB_MORECORE=yes ./worker 2048 4
 
-time ./worker 4096 2
+time ./worker 4096 4
