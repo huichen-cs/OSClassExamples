@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-int maxiters = 1000;
+int maxiters = 50;
 static void computeOnBuf(int size, int *buf);
 
 int main(int argc, char *argv[]) {
@@ -48,8 +48,12 @@ int main(int argc, char *argv[]) {
 
 static void computeOnBuf(int size, int *buf) {
     for (int j=0; j<maxiters; j++) {
+      /*
         for (int i=0; i<size; i++) {
-            buf[i] = i + 1;
+            int idx;
+            if (i % 2 == 0) idx = i;
+            else idx = size - i;
+            buf[idx] = i + 1;
         }
 
         for (int i=0; i<size; i+=1024) {
@@ -58,6 +62,11 @@ static void computeOnBuf(int size, int *buf) {
 
         for (int i=0; i<size; i++) {
             buf[i] = size - 1;
+        }
+        */
+        
+        for (int i=0; i<size; i++) {
+            buf[random() % size] = buf[random() % size ]*buf[random() % size];
         }
     }
 }
