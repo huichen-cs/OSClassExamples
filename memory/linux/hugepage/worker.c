@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-int maxiters = 500;
+int maxiters = 20;
 static void computeOnBuf(int size, int *buf);
 
 int main(int argc, char *argv[]) {
