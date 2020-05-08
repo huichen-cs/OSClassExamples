@@ -9,7 +9,7 @@ use the following to measure the TLB hits and misses
 sudo \
   perf stat \
   -e dTLB-loads,dTLB-load-misses,iTLB-loads,iTLB-load-misses -I 5000 \
-  -p $(ps -u `whoami` | grep worker | head -1 | cut -d' ' -f1)
+  -p $(ps -A | grep "[[:space:]]worker$" | head -1 | cut -d' ' -f1)
 ```
 
 
