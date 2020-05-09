@@ -37,11 +37,11 @@ fi
 echo "The huge page allocation are as follows:"
 grep -i "Hugepage" /proc/meminfo
 
-apt-get install -y x86info libhugetlbfs0 > /dev/null 2>&1
+apt-get install -y x86info cpuid libhugetlbfs0 > /dev/null 2>&1
 
 make
 
 time LD_PRELOAD=/usr/lib/libhugetlbfs.so \
-  HUGETLB_MORECORE=yes ./worker 2048 4
+  HUGETLB_MORECORE=yes ./worker ${hugepagesize} 4
 
-time ./worker 4096 4
+time ./worker ${hugepagesize} 4
