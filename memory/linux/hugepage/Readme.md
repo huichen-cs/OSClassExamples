@@ -3,8 +3,23 @@
 Note that you can only TLB  measurements on physical machines instead of
 virtual machines.
 
-Run the worker program with or without huage page allocation, and then
-use the following to measure the TLB hits and misses 
+Run the worker program with or without huage page allocation, e.g.,
+with huge page allocation, 
+
+```
+time LD_PRELOAD=/usr/lib/libhugetlbfs.so \
+  HUGETLB_MORECORE=yes ./worker 2048 8
+```
+
+and without huge page allocation,
+
+```
+time ./worker 2048 8
+```
+
+
+
+Use the following to measure the TLB hits and misses 
 ```
 sudo \
   perf stat \
