@@ -41,7 +41,18 @@ apt-get install -y x86info cpuid libhugetlbfs0 > /dev/null 2>&1
 
 make
 
-time LD_PRELOAD=/usr/lib/libhugetlbfs.so \
+if [ -r /usr/lib/i386-linux-gnu/libhugetlbfs-2.20.so ]; then
+	LIBHUGETLBFS=/usr/lib/i386-linux-gnu/libhugetlbfs-2.20.so
+elif [ -r /usr/lib/libhugetlbfs.so ]; then
+	LIBHUGETLBFS=/usr/lib/libhugetlbfs.so
+else
+	echo "Have you installed libhugetlbfs?"
+	exit 1
+fi
+echo "time LD_PRELOAD=${LIBHUGETLBFS} \
+  HUGETLB_MORECORE=yes ./worker ${hugepagesize} 4"
+time LD_PRELOAD=${LIBHUGETLBFS} \
   HUGETLB_MORECORE=yes ./worker ${hugepagesize} 4
 
+echo "time ./worker ${hugepagesize} 4"
 time ./worker ${hugepagesize} 4

@@ -7,7 +7,7 @@ Run the worker program with or without huage page allocation, e.g.,
 with huge page allocation, 
 
 ```
-time LD_PRELOAD=/usr/lib/libhugetlbfs.so \
+time LD_PRELOAD=/usr/lib/i386-linux-gnu/libhugetlbfs-2.20.so \
   HUGETLB_MORECORE=yes ./worker 2048 8
 ```
 
@@ -17,7 +17,10 @@ and without huge page allocation,
 time ./worker 2048 8
 ```
 
-
+Use the following to monitor huage page allocation
+```
+./queryhugepage.sh
+```
 
 Use the following to measure the TLB hits and misses 
 ```
@@ -37,5 +40,6 @@ sudo \
     huge_clear [execname(), pid()] <<<  \
     (gettimeofday_us() - @entry(gettimeofday_us()))}'
 ```
+
 
 
