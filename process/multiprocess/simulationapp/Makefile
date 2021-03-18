@@ -7,9 +7,26 @@ worker: worker.c
 master: master.c
 	$(CC) $(CFLAGS) master.c -o master
 
-runtest2: worker master
-	./master 2 100000 1111 9999 200000 3333 4444
+runtest1: master testbegin
+	time -p ./master 1 80000000 1111 9999
 
-runtest4: worker master
-	./master 4 100000 1111 9999 200000 3333 4444 300000 3432 4323 200000 12345 12323
+runtest2: master testbegin
+	time -p ./master 2 40000000 1111 9999 40000000 3333 4444
+
+runtest4: master testbegin
+	time -p ./master 4 20000000 1111 9999 20000000 3333 4444 20000000 3432 4323 20000000 12345 12323
+
+clean:
+	$(RM) master.o worker.o master worker
+
+testbegin:
+ifeq ("$(wildcard /usr/bin/time)","")
+	@echo "The time util is not found.";
+	@echo "Run 'apt-get install time' to install time.";
+	@exit 1;
+else
+	@echo "Test begin";
+endif
+
+
 
