@@ -66,16 +66,23 @@ static double estimatepi(int fifofd, long long maxiters , unsigned int xseed, un
 	long long iter;
 	long long accepted = 0;
 
+    struct random_data xbuf = {.state = NULL};
+    struct random_data ybuf = {.state = NULL};
 	char xstate[256];
 	char ystate[256];
 
-	initstate(xseed, xstate, sizeof(xstate));
-	initstate(yseed, ystate, sizeof(ystate));
+	initstate_r(xseed, xstate, sizeof(xstate), &xbuf);
+	initstate_r(yseed, ystate, sizeof(ystate), &ybuf);
 	for (iter=0; iter<maxiters; iter++) {
-		setstate(xstate);
-		x = (double)random() / ((double)(RAND_MAX) + 1.); 
-		setstate(ystate);
-		y = (double)random() / ((double)(RAND_MAX) + 1.);
+        int32_t rn;
+
+		setstate_r(xstate, &xbuf);
+        random_r(&xbuf, &rn);
+		x = (double)rn / ((double)(RAND_MAX) + 1.); 
+
+		setstate_r(ystate, &ybuf);
+        random_r(&ybuf, &rn);        
+		y = (double)rn / ((double)(RAND_MAX) + 1.);
 
 		if (x*x + y*y < 1.0) {
 			accepted ++;
