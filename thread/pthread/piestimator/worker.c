@@ -61,8 +61,8 @@ static long long estimatepi(long long maxiters, unsigned int xseed,
     long long iter;
     long long accepted = 0;
 
-    struct random_data xbuf;
-    struct random_data ybuf;
+    struct random_data xbuf = { .state = NULL };
+    struct random_data ybuf = { .state = NULL };
     char xstate[256];
     char ystate[256];
 
