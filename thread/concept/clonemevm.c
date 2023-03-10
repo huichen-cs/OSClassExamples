@@ -17,6 +17,7 @@ int change_print_var(void *pt) {
   int old_state = state;
   state = -1;
   printf("Child[pid=%d]: change_print_var: change state from %d to %d\n", getpid(), old_state, state);
+  return 0;
 }
 
 int main(int argc, char *argv[])
@@ -35,13 +36,13 @@ int main(int argc, char *argv[])
 
   printf("Parent[pid=%d]: state initialized to %d\n", getpid(), state);
 
-  pid = clone(change_print_var, stack_top, CLONE_VM, NULL);
+  pid = clone(change_print_var, stack_top, CLONE_VM | SIGCHLD, NULL);
   if (pid == -1) {
     perror("syscall(SYS_clone3 ...");
     exit(1);
   } else {
     printf("Parent[pid = %d]: clone returned %d\n", getpid(), pid);
-    sleep(1);
+    // sleep(1);
     // wait for the child to exit
     while ((w = waitpid(pid, &wstatus, 0)) > 0);
     printf("Parent[pid = %d]: after child exited: state = %d\n", getpid(), state);
