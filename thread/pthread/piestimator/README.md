@@ -14,7 +14,7 @@ result that in Linux `random` is made a synchronized function by using mutexe.
 Because of this, this version runs much slower in Linux machine albeit 
 producing correct result. 
 - Both of the above two versions are written for Linux. The version in
-[usinggsl](usinggsl] is a more portable version of the program since it 
+[usinggsl](usinggsl) is a more portable version of the program since it 
 uses the GNU Scientific Library (GSL) to generate pseudo random numbers and
 the GSL library has been ported to most platforms. 
 
