@@ -1,6 +1,11 @@
 all: pooltest
 
+.c.o:
+	$(CC) -I. -c $<
 
-pooltest: pooltest.c threadpool.c
-	$(CC) -I. pooltest.c threadpool.c -lpthread -o pooltest
+pooltest: pooltest.o threadpool.o
+	$(CC) -I. pooltest.o threadpool.o -lpthread -o pooltest
+
+clean:
+	$(RM) pooltest pooltest.o threadpool.o
 
