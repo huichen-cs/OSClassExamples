@@ -19,4 +19,8 @@ sudo time cgexec -g memory:cisc3320arrayfilldemo ./arrayfillerbyrow
 sudo time cgexec -g memory:cisc3320arrayfilldemo ./arrayfillerbycolumn
 ```
 
-4.  While the `arrayfillerbycolumn` is running, run  `showfaults.sh`
+4.  While the `arrayfillerbycolumn` is running, run  `showfaults.sh` to show
+		page faults statistics.  Alternatively, you can simply use `ps -o
+		min_flt,maj_flt PID` where `PID` is the process id of the
+		`./arrayfillerbycolumn`.
+
