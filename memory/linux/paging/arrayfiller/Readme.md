@@ -1,8 +1,10 @@
 # Experiment
 
-1. run `setup.sh` as root, e.g.,
+
+1. run `setup.sh` or `setup2.sh` as root. `setup.sh` is tested on Debian 10 with cgroup v1 while `setup2.sh`
+   is tested on Debian 12 with cgroup v2. For instance, Debian 12 with cgroup v2, run
 ```
-sudo ./setup.sh
+sudo ./setup2.sh
 ```
 
 2. Run `arrayfillerbyrow` via `cgexec`, e.g.,
