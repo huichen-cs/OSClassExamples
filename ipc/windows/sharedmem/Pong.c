@@ -1,50 +1,43 @@
-#include <windows.h>
-#include <stdio.h>
 #include <conio.h>
+#include <stdio.h>
 #include <tchar.h>
+#include <windows.h>
 #pragma comment(lib, "user32.lib")
 
 #define BUF_SIZE 256
-TCHAR szName[]=TEXT("Local\\MyFileMappingObject");
+TCHAR szName[] = TEXT("Local\\MyFileMappingObject");
 
-int _tmain()
-{
-   HANDLE hMapFile;
-   LPCTSTR pBuf;
+int _tmain() {
+  HANDLE hMapFile;
+  LPCTSTR pBuf;
 
-   hMapFile = OpenFileMapping(
-                   FILE_MAP_ALL_ACCESS,   // read/write access
-                   FALSE,                 // do not inherit the name
-                   szName);               // name of mapping object
+  hMapFile = OpenFileMapping(FILE_MAP_ALL_ACCESS, // read/write access
+                             FALSE,               // do not inherit the name
+                             szName);             // name of mapping object
 
-   if (hMapFile == NULL)
-   {
-      _tprintf(TEXT("Could not open file mapping object (%d).\n"),
+  if (hMapFile == NULL) {
+    _tprintf(TEXT("Could not open file mapping object (%d).\n"),
              GetLastError());
-      return 1;
-   }
+    return 1;
+  }
 
-   pBuf = (LPTSTR) MapViewOfFile(hMapFile, // handle to map object
-               FILE_MAP_ALL_ACCESS,  // read/write permission
-               0,
-               0,
-               BUF_SIZE);
+  pBuf = (LPTSTR)MapViewOfFile(hMapFile,            // handle to map object
+                               FILE_MAP_ALL_ACCESS, // read/write permission
+                               0, 0, BUF_SIZE);
 
-   if (pBuf == NULL)
-   {
-      _tprintf(TEXT("Could not map view of file (%d).\n"),
-             GetLastError());
+  if (pBuf == NULL) {
+    _tprintf(TEXT("Could not map view of file (%d).\n"), GetLastError());
 
-      CloseHandle(hMapFile);
+    CloseHandle(hMapFile);
 
-      return 1;
-   }
+    return 1;
+  }
 
-   MessageBox(NULL, pBuf, TEXT("Process2"), MB_OK);
+  MessageBox(NULL, pBuf, TEXT("Process2"), MB_OK);
 
-   UnmapViewOfFile(pBuf);
+  UnmapViewOfFile(pBuf);
 
-   CloseHandle(hMapFile);
+  CloseHandle(hMapFile);
 
-   return 0;
+  return 0;
 }

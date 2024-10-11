@@ -6,7 +6,7 @@
 #include "tasks.h"
 #include "util.h"
 
-int *numbers;                   /* this data is shared by the threads      */
+int *numbers; /* this data is shared by the threads      */
 int num_numbers;
 
 static int *mk_random_numbers(int n);
@@ -21,36 +21,35 @@ int main(int argc, char *argv[]) {
 
   numbers = mk_random_numbers(num_numbers);
   print_array("numbers", num_numbers, numbers);
-    
 
-  pthread_t *tids;  /* the thread identifier */
+  pthread_t *tids;       /* the thread identifier */
   pthread_attr_t *attrs; /* set of thread attributes */
 
   /* create the threads and distribute work among the threads  */
-  void *(*worker[])(void *) = { 
-        find_min, find_max, compute_sum, compute_average };
-  int num_threads = sizeof(worker)/sizeof(void *);
+  void *(*worker[])(void *) = {find_min, find_max, compute_sum,
+                               compute_average};
+  int num_threads = sizeof(worker) / sizeof(void *);
   printf("number of threads = %d\n", num_threads);
-  tids = (pthread_t *)malloc(sizeof(pthread_t)*num_threads);
-  attrs = (pthread_attr_t *)malloc(sizeof(pthread_attr_t)*num_threads);
-  double *results = malloc(sizeof(double)*num_threads);
+  tids = (pthread_t *)malloc(sizeof(pthread_t) * num_threads);
+  attrs = (pthread_attr_t *)malloc(sizeof(pthread_attr_t) * num_threads);
+  double *results = malloc(sizeof(double) * num_threads);
 
-  for (int i=0; i<num_threads; i++) {
-     /* set the default attributes of the thread */
-     pthread_attr_init(attrs+i);
-     tids[i] = i;
+  for (int i = 0; i < num_threads; i++) {
+    /* set the default attributes of the thread */
+    pthread_attr_init(attrs + i);
+    tids[i] = i;
 
-     pthread_create(tids+i, attrs+i, worker[i], results+i);
+    pthread_create(tids + i, attrs + i, worker[i], results + i);
 
-     printf("worker %d created.\n", i);
+    printf("worker %d created.\n", i);
   }
 
-  for (int i=0; i<num_threads; i++) {
-     /* wait for the thread to exit */
-     pthread_join(tids[i],NULL);
+  for (int i = 0; i < num_threads; i++) {
+    /* wait for the thread to exit */
+    pthread_join(tids[i], NULL);
   }
 
-  for (int i=0; i<num_threads; i++) {
+  for (int i = 0; i < num_threads; i++) {
     printf("results[%d] = %f\n", i, results[i]);
   }
 
@@ -60,15 +59,14 @@ int main(int argc, char *argv[]) {
 }
 
 static int *mk_random_numbers(int n) {
-  int *numbers;	
+  int *numbers;
 
-  numbers = (int*)malloc(sizeof(int)*n);
+  numbers = (int *)malloc(sizeof(int) * n);
 
   srandom(time(NULL));
-  for (int i=0; i<n; i++) {
+  for (int i = 0; i < n; i++) {
     numbers[i] = random();
   }
- 
+
   return numbers;
 }
-

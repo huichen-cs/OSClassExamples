@@ -1,17 +1,17 @@
 /**
- * Revised based on the sample code in 
+ * Revised based on the sample code in
  *   Silberschatz, Abraham, Greg Gagne, and Peter B. Galvin. Operating system
  *   concepts. Wiley, 2018.
  */
-#include <windows.h>
 #include <stdio.h>
+#include <windows.h>
 
 DWORD Sum; /* data is shared by the thread(s) */
 
 /* The thread will execute in this function */
 DWORD WINAPI Summation(LPVOID Param) {
 
-  DWORD Upper = *(DWORD*)Param;
+  DWORD Upper = *(DWORD *)Param;
 
   for (DWORD i = 1; i <= Upper; i++) {
     Sum += i;
@@ -29,20 +29,19 @@ int main(int argc, char *argv[]) {
   Param = atoi(argv[1]);
 
   /* create the thread */
-  ThreadHandle = CreateThread(
-    NULL, /* default security attributes */
-    0, /* default stack size */
-    Summation, /* thread function */
-    &Param, /* parameter to thread function */
-    0, /* default creation flags */
-    &ThreadId); /* returns the thread identifier */
+  ThreadHandle = CreateThread(NULL,       /* default security attributes */
+                              0,          /* default stack size */
+                              Summation,  /* thread function */
+                              &Param,     /* parameter to thread function */
+                              0,          /* default creation flags */
+                              &ThreadId); /* returns the thread identifier */
 
-   /* now wait for the thread to finish */
-   WaitForSingleObject(ThreadHandle,INFINITE);
+  /* now wait for the thread to finish */
+  WaitForSingleObject(ThreadHandle, INFINITE);
 
-   /* close the thread handle */
+  /* close the thread handle */
 
-   CloseHandle(ThreadHandle);
+  CloseHandle(ThreadHandle);
 
-   printf("sum = %d\n",Sum);
+  printf("sum = %d\n", Sum);
 }

@@ -1,7 +1,7 @@
 /*
  * Sample program
  *   Silberschatz, Abraham, Greg Gagne, and Peter B. Galvin. Operating system
- *   concepts. Wiley, 2018. 
+ *   concepts. Wiley, 2018.
  */
 
 #include <stdio.h>
@@ -20,9 +20,9 @@ int main(VOID) {
 
   /* the child reads from the pipe */
   if (ReadFile(ReadHandle, buffer, BUFFER_SIZE, &read, NULL)) {
-     printf("child read %s",buffer);
+    printf("child read %s", buffer);
   } else {
-     fprintf(stderr, "Error reading from pipe");
+    fprintf(stderr, "Error reading from pipe");
   }
 
   return 0;

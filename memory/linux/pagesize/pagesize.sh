@@ -1,6 +1,6 @@
 #!/bin/sh
 
-pagesize=`getconf PAGESIZE`
+pagesize=$(getconf PAGESIZE)
 
 echo "Page size = ${pagesize} bytes"
 

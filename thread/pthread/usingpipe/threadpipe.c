@@ -15,10 +15,16 @@ int main(int argc, char *argv[]) {
   }
 
   /* create two ordinary pipes */
-  if (-1 == pipe(pipefd)) { perror("p: pipe"); exit(EXIT_FAILURE); }
-  if (-1 == pipe(pipefd + 2)) { perror("p: pipe"); exit(EXIT_FAILURE); }
+  if (-1 == pipe(pipefd)) {
+    perror("p: pipe");
+    exit(EXIT_FAILURE);
+  }
+  if (-1 == pipe(pipefd + 2)) {
+    perror("p: pipe");
+    exit(EXIT_FAILURE);
+  }
 
-  pthread_t tid;  /* the thread identifier */
+  pthread_t tid;       /* the thread identifier */
   pthread_attr_t attr; /* set of thread attributes */
 
   /* set the default attributes of the thread */
@@ -33,17 +39,21 @@ int main(int argc, char *argv[]) {
 
   int nbytes, msglen;
   if (read(readfd, &msglen, sizeof(msglen)) != sizeof(msglen)) {
-      perror("p: read msglen");
-      exit(EXIT_FAILURE);
+    perror("p: read msglen");
+    exit(EXIT_FAILURE);
   }
   printf("p: read from pipe integer msglen %d\n", msglen);
 
   char *msgbuf = malloc(msglen + 1);
-  if (NULL == msgbuf) { perror("p: malloc"); exit(EXIT_FAILURE); }
+  if (NULL == msgbuf) {
+    perror("p: malloc");
+    exit(EXIT_FAILURE);
+  }
 
   nbytes = read(readfd, msgbuf, msglen);
-  if (-1 == nbytes || nbytes > msglen) { 
-      perror("p: read message"); exit(EXIT_FAILURE); 
+  if (-1 == nbytes || nbytes > msglen) {
+    perror("p: read message");
+    exit(EXIT_FAILURE);
   }
   msgbuf[nbytes] = '\0';
   printf("p: read from pipe message %s\n", msgbuf);
@@ -90,14 +100,17 @@ static void *pipethread(void *arg) {
   printf("c: read from pipe integer %d\n", msglen);
 
   char *msgbuf = malloc(msglen + 1);
-  if (NULL == msgbuf) { perror("c: malloc"); exit(EXIT_FAILURE); }
+  if (NULL == msgbuf) {
+    perror("c: malloc");
+    exit(EXIT_FAILURE);
+  }
   int nbytes = read(readfd, msgbuf, msglen);
-  if (-1 == nbytes || nbytes > msglen) { 
-      perror("c: reaad msg"); exit(EXIT_FAILURE); 
+  if (-1 == nbytes || nbytes > msglen) {
+    perror("c: reaad msg");
+    exit(EXIT_FAILURE);
   }
   msgbuf[nbytes + 1] = '\0';
   printf("c: read from pipe message %s\n", msgbuf);
 
   return NULL;
 }
-

@@ -19,46 +19,45 @@ int main(void) {
 
   /* create the pipe */
   if (pipe(fd) == -1) {
-      perror("pipe");
-      exit(EXIT_FAILURE);
-   }
+    perror("pipe");
+    exit(EXIT_FAILURE);
+  }
 
-   /* fork a child process */
-   pid = fork();
-   if (-1 == pid) { /* error occurred */
-       perror("fork");
-       exit(EXIT_FAILURE);
-   } else if (pid > 0) { /* parent process */
-     /* an ordinary pipe is unidirectional, and the array fd
-      * is duplicated, but one end is to be used. Since 
-      * by design of this program, the parent is to write
-      * to the pipe, thus, we close the read end
-      * of the pipe that is unused */
-     close(fd[READ_END]);
+  /* fork a child process */
+  pid = fork();
+  if (-1 == pid) { /* error occurred */
+    perror("fork");
+    exit(EXIT_FAILURE);
+  } else if (pid > 0) { /* parent process */
+    /* an ordinary pipe is unidirectional, and the array fd
+     * is duplicated, but one end is to be used. Since
+     * by design of this program, the parent is to write
+     * to the pipe, thus, we close the read end
+     * of the pipe that is unused */
+    close(fd[READ_END]);
 
-     /* write to the pipe */
-     write(fd[WRITE_END], write_msg, strlen(write_msg)+1);
+    /* write to the pipe */
+    write(fd[WRITE_END], write_msg, strlen(write_msg) + 1);
 
-     /* we finished writing, so we close the
-      * write end of the pipe */
-     close(fd[WRITE_END]);
-   } else { /* child process */
-     /* an ordinary pipe is unidirectional, and the array fd
-      * is duplicated, but one end is to be used. Since 
-      * by design of this program, the child is to read
-      * from the pipe, thus, we close the write end
-      * of the pipe that is unused */
-     close(fd[WRITE_END]);
+    /* we finished writing, so we close the
+     * write end of the pipe */
+    close(fd[WRITE_END]);
+  } else { /* child process */
+    /* an ordinary pipe is unidirectional, and the array fd
+     * is duplicated, but one end is to be used. Since
+     * by design of this program, the child is to read
+     * from the pipe, thus, we close the write end
+     * of the pipe that is unused */
+    close(fd[WRITE_END]);
 
-     /* read from the pipe */
-     read(fd[READ_END], read_msg, BUFFER_SIZE);
+    /* read from the pipe */
+    read(fd[READ_END], read_msg, BUFFER_SIZE);
 
-     printf("read %s",read_msg);
+    printf("read %s", read_msg);
 
-     /* close the read end of the pipe */
-     close(fd[READ_END]);
-   }
+    /* close the read end of the pipe */
+    close(fd[READ_END]);
+  }
 
-   return 0;
+  return 0;
 }
-
