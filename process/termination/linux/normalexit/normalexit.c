@@ -1,26 +1,24 @@
-#include <sys/types.h>
-#include <sys/stat.h>
 #include <fcntl.h>
-#include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <unistd.h>
 
-void exitcalled() {
-    fprintf(stderr, "Called at exit.\n");
-}
+void exitcalled() { fprintf(stderr, "Called at exit.\n"); }
 
 int main() {
-    int fd;
+  int fd;
 
-    atexit(exitcalled);
+  atexit(exitcalled);
 
-    fd = open("NonExistingFile.txt", O_RDONLY);
-    if (-1 == fd) {
-        perror("NonExistingFile.txt");
-        exit(EXIT_FAILURE);
-    }
+  fd = open("NonExistingFile.txt", O_RDONLY);
+  if (-1 == fd) {
+    perror("NonExistingFile.txt");
+    exit(EXIT_FAILURE);
+  }
 
-    close(fd);
+  close(fd);
 
-    return 0;
+  return 0;
 }

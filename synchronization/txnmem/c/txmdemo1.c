@@ -1,13 +1,11 @@
 #include <stdio.h>
 
 int main() {
-    int counter = 0;    
+  int counter = 0;
 
-    __transaction_atomic { 
-        counter ++;
-    }
+  __transaction_atomic { counter++; }
 
-    printf("counter = %d\n", counter);
+  printf("counter = %d\n", counter);
 
-    return 0;
+  return 0;
 }

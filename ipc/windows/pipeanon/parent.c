@@ -1,7 +1,7 @@
 /*
  * Sample program
  *   Silberschatz, Abraham, Greg Gagne, and Peter B. Galvin. Operating system
- *   concepts. Wiley, 2018. 
+ *   concepts. Wiley, 2018.
  */
 
 #include <stdio.h>
@@ -20,15 +20,15 @@ int main(VOID) {
   DWORD written;
 
   /* set up security attributes allowing pipes to be inherited */
-  SECURITY_ATTRIBUTES sa = {sizeof(SECURITY_ATTRIBUTES),NULL,TRUE};
+  SECURITY_ATTRIBUTES sa = {sizeof(SECURITY_ATTRIBUTES), NULL, TRUE};
 
   /* allocate memory */
   ZeroMemory(&pi, sizeof(pi));
 
   /* create the pipe */
   if (!CreatePipe(&ReadHandle, &WriteHandle, &sa, 0)) {
-   fprintf(stderr, "Create Pipe Failed");
-   return 1;
+    fprintf(stderr, "Create Pipe Failed");
+    return 1;
   }
 
   /* establish the START_INFO structure for the child process */
@@ -43,16 +43,15 @@ int main(VOID) {
   SetHandleInformation(WriteHandle, HANDLE_FLAG_INHERIT, 0);
 
   /* create the child process */
-  CreateProcess(NULL, "child.exe", NULL, NULL,
-                TRUE, /* inherit handles */
+  CreateProcess(NULL, "child.exe", NULL, NULL, TRUE, /* inherit handles */
                 0, NULL, NULL, &si, &pi);
 
   /* close the unused end of the pipe */
   CloseHandle(ReadHandle);
 
   /* the parent writes to the pipe */
-  if (!WriteFile(WriteHandle, message,BUFFER_SIZE,&written,NULL)) {
-   fprintf(stderr, "Error writing to pipe.");
+  if (!WriteFile(WriteHandle, message, BUFFER_SIZE, &written, NULL)) {
+    fprintf(stderr, "Error writing to pipe.");
   }
 
   /* close the write end of the pipe */

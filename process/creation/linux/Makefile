@@ -7,3 +7,5 @@ worker: worker.c
 master: master.c
 	$(CC) $(CFLAGS) master.c -o master
 
+clean:
+	$(RM) worker master
