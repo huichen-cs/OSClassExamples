@@ -10,5 +10,3 @@ readelf -a main.o
 
 objdump --disassemble main.o
 objdump --disassemble sumsine.o
-
-

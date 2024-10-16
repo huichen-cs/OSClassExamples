@@ -6,15 +6,13 @@ if [ $# -lt 2 ]; then
 fi
 
 function get_frame_list() {
-	./pagetable $1 | head -n-3 | cut -d' ' -f4 > $2
+	./pagetable "$1" | head -n-3 | cut -d' ' -f4 >"$2"
 }
 
-f1=$(tempfile)
-f2=$(tempfile)
-trap "rm -f -- '$f1' '$f2'" EXIT
+f1=$(mktemp)
+f2=$(mktemp)
+trap 'rm -f -- "$f1" "$f2"' EXIT
 
-get_frame_list $1 ${f1}
-get_frame_list $2 ${f2}
-cat ${f1} ${f2} | sort | uniq -c | sort -n -k1,1
-
-
+get_frame_list "$1" "${f1}"
+get_frame_list "$2" "${f2}"
+cat "${f1}" "${f2}" | sort | uniq -c | sort -n -k1,1
