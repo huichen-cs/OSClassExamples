@@ -2,7 +2,7 @@
 
 #include "sumsine.h"
 
-int main(int argc, char* argv[]) {
-    std::cout << sumsine() << std::endl;
-    return 0;
+int main(int argc, char *argv[]) {
+  std::cout << sumsine() << std::endl;
+  return 0;
 }
