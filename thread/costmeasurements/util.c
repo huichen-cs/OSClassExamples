@@ -7,7 +7,7 @@
 unsigned long long get_ns_time() {
   struct timespec ts;
 
-  if (clock_gettime(CLOCK_REALTIME, &ts) != 0) {
+  if (clock_gettime(CLOCK_MONOTONIC, &ts) != 0) {
     errorExit("clock_gettime()");
   }
 
