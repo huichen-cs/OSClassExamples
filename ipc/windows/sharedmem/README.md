@@ -4,4 +4,4 @@
 
 ### Using Named Shared Memory
 
-See https://docs.microsoft.com/en-us/windows/desktop/memory/creating-named-shared-memory
+See <https://docs.microsoft.com/en-us/windows/desktop/memory/creating-named-shared-memory>

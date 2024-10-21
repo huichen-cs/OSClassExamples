@@ -1,3 +1,3 @@
+# Reference
 
-## Reference
-[vvar] memory region, https://lwn.net/Articles/615809/
+[vvar] memory region, <https://lwn.net/Articles/615809/>
