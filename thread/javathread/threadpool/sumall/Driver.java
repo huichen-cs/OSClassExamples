@@ -1,15 +1,18 @@
-/**
- * Revised based on the sample code in 
- *   Silberschatz, Abraham, Greg Gagne, and Peter B. Galvin. Operating system
- *   concepts. Wiley, 2018.
- */
-import java.util.concurrent.*;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
+/**
+ * Revised based on the sample code in Silberschatz, Abraham, Greg Gagne, and Peter B. Galvin.
+ * Operating system concepts. Wiley, 2018.
+ */
 class Summation implements Callable<Integer> {
 
   private int upper;
 
-  public Summation(int upper) {
+  Summation(final int upper) {
     this.upper = upper;
   }
 
@@ -21,32 +24,32 @@ class Summation implements Callable<Integer> {
       sum += i;
     }
 
-    return new Integer(sum);
+    return Integer.valueOf(sum);
   }
 }
 
 public class Driver {
 
-  public static void main(String[] args) {
+  public static void main(final String[] args) {
 
-     if (args.length == 0) {
-         System.out.println("Usage: Driver number");
-         return;
-     }
+    if (args.length == 0) {
+      System.out.println("Usage: Driver number");
+      return;
+    }
 
-     int upper = Integer.parseInt(args[0]);
+    int upper = Integer.parseInt(args[0]);
 
-     ExecutorService pool = Executors.newSingleThreadExecutor();
+    ExecutorService pool = Executors.newSingleThreadExecutor();
 
-     Future<Integer> result = pool.submit(new Summation(upper));
+    Future<Integer> result = pool.submit(new Summation(upper));
 
-     try {
+    try {
 
-       System.out.println("sum = " + result.get());
+      System.out.println("sum = " + result.get());
 
-     } catch (InterruptedException | ExecutionException ie) { }
+    } catch (InterruptedException | ExecutionException ie) {
+    }
 
-     pool.shutdown();
+    pool.shutdown();
   }
-
 }
