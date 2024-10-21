@@ -2,4 +2,4 @@
 
 ## Mail Slots
 
-The example is from https://docs.microsoft.com/en-us/windows/desktop/ipc/mailslots
+The example is from <https://docs.microsoft.com/en-us/windows/desktop/ipc/mailslots>

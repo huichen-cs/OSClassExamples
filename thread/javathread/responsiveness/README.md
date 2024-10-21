@@ -11,6 +11,6 @@ process, the author provides the self-contained java packages.
 
 To run a program, use `java -jar <jar_file>`, e.g.,
 
-```
+```sh
 java -jar ResponsiveViaTask.jar
 ```
