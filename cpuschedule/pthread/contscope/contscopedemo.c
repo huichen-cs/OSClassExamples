@@ -6,6 +6,7 @@
 
 #include <pthread.h>
 #include <stdio.h>
+#include <stdint.h>
 #include <unistd.h>
 
 #define NUM_THREADS 5
@@ -77,7 +78,6 @@ static void *runner(void *param) {
   pid_t ppid = getppid();
   pid_t pid = getpid();
   pthread_t tid = pthread_self();
-  printf("ppid = %lu pid = %lu tid = %lu\n", (unsigned long)ppid,
-         (unsigned long)pid, (unsigned long)tid);
+  printf("ppid = %d pid = %d tid = %ju\n", ppid, pid, (uintmax_t)tid);
   pthread_exit(0);
 }
