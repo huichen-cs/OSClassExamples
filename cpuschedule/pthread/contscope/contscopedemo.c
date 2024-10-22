@@ -5,8 +5,8 @@
  */
 
 #include <pthread.h>
-#include <stdio.h>
 #include <stdint.h>
+#include <stdio.h>
 #include <unistd.h>
 
 #define NUM_THREADS 5
