@@ -32,3 +32,4 @@ jobs:
           FILTER_REGEX_EXCLUDE: (^|/)tests/
           VALIDATE_ALL_CODEBASE: true
           VALIDATE_CPP: false
+          JAVA_FILE_NAME: .sun-checks.xml
