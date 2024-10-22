@@ -7,15 +7,14 @@
 #include "util.h"
 
 void *threadFunc(void *arg) {
-  (void)arg;
-  return NULL;
+  return EXIT_SUCCESS;
 }
 
 int main(int argc, char *argv[]) {
   pthread_t tid;
   int count;
   int size;
-  unsigned long long t0, t1, duration, total = 0LLU;
+  unsigned long long t0, t1, total = 0LLU;
 
   if (argc < 3) {
     printf("Usage: %s COUNT ARRAY_SIZE\n", argv[0]);
@@ -27,27 +26,14 @@ int main(int argc, char *argv[]) {
 
   allocateAndUseBuf(size);
 
+  t0 = get_ns_time();
   for (int i = 0; i < count; i++) {
-    t0 = get_ns_time();
-
     if (pthread_create(&tid, NULL, threadFunc, NULL) != 0) {
       errorExit("pthread_create");
     }
-
-    t1 = get_ns_time();
-
-    duration = t1 - t0;
-    // printf("duration = %ld\n", duration);
-
-    total += duration;
-
-    usleep(800);
-
-    if (pthread_join(tid, NULL)) {
-      errorExit("pthread_join");
-    }
   }
-
+  t1 = get_ns_time();
+  total = t1 - t0;
   printf("average time: %f\n", (double)total / (double)count);
   exit(EXIT_SUCCESS);
 }
