@@ -1,3 +1,4 @@
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/types.h>
@@ -10,7 +11,7 @@ int main(int argc, char *argv[]) {
   pid_t pid;
   int count;
   int size;
-  unsigned long long t0, t1, duration, total = 0LLU;
+  uint64_t t0, t1, duration, total = 0LLU;
 
   if (argc < 3) {
     printf("Usage: %s COUNT ARRAY_SIZE\n", argv[0]);
