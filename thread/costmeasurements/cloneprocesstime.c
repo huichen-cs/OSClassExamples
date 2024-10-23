@@ -1,5 +1,6 @@
 #define _GNU_SOURCE
 #include <sched.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/types.h>
@@ -18,7 +19,7 @@ int main(int argc, char *argv[]) {
   pid_t pid;
   int count;
   int size;
-  unsigned long long t0, t1, duration, total = 0LLU;
+  uint64_t t0, t1, duration, total = 0LLU;
 
   if (argc < 3) {
     printf("Usage: %s COUNT ARRAY_SIZE\n", argv[0]);
@@ -31,7 +32,6 @@ int main(int argc, char *argv[]) {
   allocateAndUseBuf(size);
 
   for (int i = 0; i < count; i++) {
-
     t0 = get_ns_time();
     pid = clone(dummy, stackTop, SIGCHLD, NULL);
     t1 = get_ns_time();
@@ -51,7 +51,7 @@ int main(int argc, char *argv[]) {
       errorExit("wait()");
     }
   }
-  printf("average time: %f\n", (double)total / (double)count);
+  printf("average time: %f\n", (double)total / (double)(count));
 
   exit(EXIT_SUCCESS);
 }

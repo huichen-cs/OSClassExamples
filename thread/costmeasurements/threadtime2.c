@@ -1,4 +1,5 @@
 #include <pthread.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -6,15 +7,13 @@
 
 #include "util.h"
 
-void *threadFunc(void *arg) {
-  return EXIT_SUCCESS;
-}
+void *threadFunc(void *arg) { return EXIT_SUCCESS; }
 
 int main(int argc, char *argv[]) {
   pthread_t tid;
   int count;
   int size;
-  unsigned long long t0, t1, total = 0LLU;
+  uint64_t t0, t1, total = 0LLU;
 
   if (argc < 3) {
     printf("Usage: %s COUNT ARRAY_SIZE\n", argv[0]);
