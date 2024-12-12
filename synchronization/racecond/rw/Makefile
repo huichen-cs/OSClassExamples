@@ -1,9 +1,9 @@
-all: readwritedrive
+all: readwrite
 
 CFLAGS=-Wall -c
 LFLAGS=-lpthread
 
-readwritedrive: readwritedrive.o readwrite.o 
+readwrite: readwritedrive.o readwrite.o 
 	$(CC) $(LFLAGS) readwritedrive.o readwrite.o -o readwrite
 	
 readwritedrive.o: readwritedrive.c
@@ -12,5 +12,6 @@ readwritedrive.o: readwritedrive.c
 readwrite.o: readwrite.c
 	$(CC) $(CFLAGS) readwrite.c 
 
+clean:
+	${RM} readwrite
 
- 

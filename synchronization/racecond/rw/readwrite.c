@@ -12,8 +12,9 @@
 void *readwrite(void *param) {
   struct thread_info *tinfoptr = (struct thread_info *)param;
   int *itemptr = tinfoptr->item;
+  unsigned int seed;
 
-  int i, stop = rand() * 1000, s;
+  int i, stop = rand_r(&seed) * 1000, s;
 
   /* do some random stuff, takes random amount of time */
   for (i = 0; i < stop; i++) {

@@ -46,7 +46,6 @@ void *consumer(void *ptr) {
   int i, nextconsumed, sum = 0;
 
   for (i = 0; i < NUM_PRODUCED; i++) {
-
     pthread_mutex_lock(&the_mutex);
 
     while (counter == 0) {

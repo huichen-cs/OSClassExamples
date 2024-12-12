@@ -123,8 +123,9 @@ static void producer() {
     /* produce an item in next produced */
     int nextproduced = i;
 
-    while (bufptr->counter == BUFFER_SIZE)
-      ; /* do nothing (busy waiting) */
+    while (bufptr->counter == BUFFER_SIZE) {
+      /* do nothing (busy waiting) */
+    }
     bufptr->buffer[bufptr->in] = nextproduced;
     bufptr->in = (bufptr->in + 1) % BUFFER_SIZE;
 
@@ -161,8 +162,9 @@ static void consumer() {
 
   sum = 0;
   for (i = 0; i < NUM_PRODUCED; i++) {
-    while (bufptr->counter == 0)
-      ; /* do nothing */
+    while (bufptr->counter == 0) {
+      /* do nothing */
+    }
     nextconsumed = bufptr->buffer[bufptr->out];
     bufptr->out = (bufptr->out + 1) % BUFFER_SIZE;
 

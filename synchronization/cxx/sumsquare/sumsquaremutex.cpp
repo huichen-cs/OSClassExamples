@@ -8,7 +8,6 @@ static int sum = 0;
 static std::mutex summutex;
 
 static void square(int n) {
-
   summutex.lock();
   sum += n * n;
   summutex.unlock();
