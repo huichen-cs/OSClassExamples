@@ -27,22 +27,22 @@ int main(int argc, char *argv[]) {
 
   // see
   // https://docs.microsoft.com/en-us/windows/desktop/api/fileapi/nf-fileapi-createfilea
-  HANDLE hSrcFile = CreateFile(argv[1],               // path of the file
-                               GENERIC_READ,          // open for reading
-                               0,                     // do not share
-                               NULL,                  // default security
-                               OPEN_EXISTING,         // open existing file only
-                               FILE_ATTRIBUTE_NORMAL, // normal file
-                               NULL);                 // no attr. template
+  HANDLE hSrcFile = CreateFile(argv[1],        // path of the file
+                               GENERIC_READ,   // open for reading
+                               0,              // do not share
+                               NULL,           // default security
+                               OPEN_EXISTING,  // open existing file only
+                               FILE_ATTRIBUTE_NORMAL,  // normal file
+                               NULL);                  // no attr. template
   ExitIfFailed(argv[1], hSrcFile);
 
-  HANDLE hDstFile = CreateFile(argv[2],               // path of the file
-                               GENERIC_WRITE,         // open for reading
-                               0,                     // do not share
-                               NULL,                  // default security
-                               CREATE_NEW,            // open existing file only
-                               FILE_ATTRIBUTE_NORMAL, // normal file
-                               NULL);                 // no attr. template
+  HANDLE hDstFile = CreateFile(argv[2],        // path of the file
+                               GENERIC_WRITE,  // open for reading
+                               0,              // do not share
+                               NULL,           // default security
+                               CREATE_NEW,     // open existing file only
+                               FILE_ATTRIBUTE_NORMAL,  // normal file
+                               NULL);                  // no attr. template
   ExitIfFailed(argv[2], hDstFile);
 
   int status = CopyFile(hSrcFile, hDstFile);
@@ -107,10 +107,10 @@ static int CopyFile(HANDLE hSrcFile, HANDLE hDstFile) {
       break;
     // See
     // https://docs.microsoft.com/en-us/windows/desktop/api/fileapi/nf-fileapi-writefile
-    if (!WriteFile(hDstFile,      // open file handle
-                   buffer,        // start of data to write
-                   bytesRead,     // number of bytes to write
-                   &bytesWritten, // number of bytes that were written
+    if (!WriteFile(hDstFile,       // open file handle
+                   buffer,         // start of data to write
+                   bytesRead,      // number of bytes to write
+                   &bytesWritten,  // number of bytes that were written
                    NULL)) {
       return -1;
     }

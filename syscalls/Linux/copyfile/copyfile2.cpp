@@ -1,15 +1,15 @@
 #include <iostream>
 
-#include <cstdlib> /* to use exit: see "man 3 exit"            */
-#include <cstring> /* to use strerror: see "man 3 strerror"    */
+#include <cstdlib>  // to use exit: see "man 3 exit"
+#include <cstring>  // to use strerror: see "man 3 strerror"
 
 #include <fcntl.h>
 #include <sys/stat.h>
-#include <sys/types.h> /* to use open: see "man 2 open"        */
+#include <sys/types.h>  // to use open: see "man 2 open"
 
-#include <unistd.h> /* to use close: see "man 2 close"          
-                     * to use read:  see "man 2 read "          
-                     * to use write: see "man 2 write"          */
+#include <unistd.h>  // to use close: see "man 2 close"
+                     // to use read:  see "man 2 read "
+                     // to use write: see "man 2 write"
 
 static void usage(char *app);
 static void exit_if_failed(char *pathname, int fd);

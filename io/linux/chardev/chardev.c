@@ -34,10 +34,10 @@ static ssize_t device_write(struct file *, const char *, size_t, loff_t *);
  * Global variables are declared as static, so are global within the file.
  */
 
-static int Major;           /* Major number assigned to our device driver */
-static int Device_Open = 0; /* Is device open?
-                             * Used to prevent multiple access to device */
-static char msg[BUF_LEN];   /* The msg the device will give when asked */
+static int Major;            /* Major number assigned to our device driver */
+static int Device_Open = 0;  // Is device open?
+                             // Used to prevent multiple access to device
+static char msg[BUF_LEN];    /* The msg the device will give when asked */
 static char *msg_Ptr;
 
 static struct class *cls;
@@ -96,7 +96,8 @@ static int device_open(struct inode *inode, struct file *file) {
     return -EBUSY;
 
   Device_Open++;
-  sprintf(msg, "I already told you %d times Hello world!\n", counter++);
+  snprintf(msg, BUF_LEN, "I already told you %d times Hello world!\n",
+           counter++);
   msg_Ptr = msg;
   try_module_get(THIS_MODULE);
 
@@ -142,7 +143,6 @@ static ssize_t device_read(struct file *filp, /* see include/linux/fs.h   */
    * Actually put the data into the buffer
    */
   while (length && *msg_Ptr) {
-
     /*
      * The buffer is in the user data segment, not the kernel
      * segment so "*" assignment won't work.  We have to use

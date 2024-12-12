@@ -6,7 +6,6 @@
 static double sum_avg;
 
 double *average_1(input_data *input, CLIENT *client) {
-
   double *dp = input->input_data.input_data_val;
   u_int i;
   sum_avg = 0;
