@@ -1,6 +1,7 @@
 #include <pthread.h>
 #include <stdint.h>
 #include <stdio.h>
+#include <stdint.h>
 #include <stdlib.h>
 
 #include "part_sum.h"

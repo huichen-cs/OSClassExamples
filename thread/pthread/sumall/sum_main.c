@@ -2,8 +2,10 @@
 #include <pthread.h>
 #include <stdint.h>
 #include <stdio.h>
+#include <stdint.h>
 #include <stdlib.h>
 #include <time.h>
+#include <inttypes.h>
 
 #include "part_sum.h"
 #include "util.h"
