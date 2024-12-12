@@ -4,6 +4,8 @@
 #include <sys/types.h>
 #include <unistd.h>
 
+#include <inttypes.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -12,22 +14,22 @@
 #include "worker.h"
 extern struct thread_info *tinfo;
 
-static long long estimatepi(long long maxiters, gsl_rng *rngx, gsl_rng *rngy);
+static int64_t estimatepi(int64_t maxiters, gsl_rng *rngx, gsl_rng *rngy);
 
 void *piworker(void *param) {
   int tnum = *(int *)param;
   double *pi;
-  long long accepted;
-  long long maxiter = tinfo[tnum].maxiter;
+  int64_t accepted;
+  int64_t maxiter = tinfo[tnum].maxiter;
   int seedx = tinfo[tnum].seedx;
   int seedy = tinfo[tnum].seedy;
   gsl_rng *rngx = tinfo[tnum].rngx;
   gsl_rng *rngy = tinfo[tnum].rngy;
 
-  printf("\tthread at pid = %ld and tid = %lu with appid = %d\n"
-         "\tmaxiter = %lld seedx = %d seedy = %d\n",
-         (long)getpid(), (long)tinfo[tnum].thread_id, tinfo[tnum].thread_num,
-         maxiter, seedx, seedy);
+  printf("\tthread at pid = %" PRId32 " and tid = %" PRId32 " with appid = %d\n"
+         "\tmaxiter = %" PRId64 " seedx = %d seedy = %d\n",
+         (uint32_t)getpid(), (uint32_t)tinfo[tnum].thread_id,
+         tinfo[tnum].thread_num, maxiter, seedx, seedy);
 
   accepted = estimatepi(maxiter, rngx, rngy);
   tinfo[tnum].accepted = accepted;
@@ -37,7 +39,7 @@ void *piworker(void *param) {
   return pi;
 }
 
-static long long estimatepi(long long maxiters, gsl_rng *rngx, gsl_rng *rngy) {
+static int64_t estimatepi(int64_t maxiters, gsl_rng *rngx, gsl_rng *rngy) {
   /*
    * A simple Monte Carlo method:
    *
@@ -59,8 +61,8 @@ static long long estimatepi(long long maxiters, gsl_rng *rngx, gsl_rng *rngy) {
 
   double x;
   double y;
-  long long iter;
-  long long accepted = 0;
+  int64_t iter;
+  int64_t accepted = 0;
 
   double pi;
 
@@ -74,8 +76,8 @@ static long long estimatepi(long long maxiters, gsl_rng *rngx, gsl_rng *rngy) {
   }
 
   pi = (double)accepted / (double)maxiters * 4.0;
-  printf("\tworker at pid=%ld: accepted = %lld pi = %lf\n", (long)getpid(),
-         accepted, pi);
+  printf("\tworker at pid=%" PRId32 ": accepted = %" PRId64 " pi = %lf\n",
+         (uint32_t)getpid(), accepted, pi);
 
   return accepted;
 }

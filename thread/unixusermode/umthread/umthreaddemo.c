@@ -14,7 +14,6 @@ static ucontext_t m_context, hu_context, hw_context, main_context;
 static int hu_exited = 0, hw_exited = 0;
 
 int main(int argc, char *argv[]) {
-
   make_hu_context();
   make_hw_context();
 

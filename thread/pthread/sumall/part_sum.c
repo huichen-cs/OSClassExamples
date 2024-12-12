@@ -1,20 +1,20 @@
 #include <pthread.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 
 #include "part_sum.h"
 #include "util.h"
 
-extern int *numbers;         /* this data is shared by the threads      */
-extern int *indices;         /* this data is also shared by the threads */
-extern long long *part_sums; /* this data is also shared by the threads */
+extern int *numbers;       /* this data is shared by the threads      */
+extern int *indices;       /* this data is also shared by the threads */
+extern int64_t *part_sums; /* this data is also shared by the threads */
 
 /* The thread will execute in this function */
 void *part_sum_runner(void *param) {
-
   int worker_idx = *((int *)param);
 
-  long long sum = 0;
+  int64_t sum = 0;
 
   int begin = indices[worker_idx * 2];
   int end = indices[worker_idx * 2 + 1];

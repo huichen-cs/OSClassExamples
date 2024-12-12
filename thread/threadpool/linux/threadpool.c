@@ -39,7 +39,7 @@ static void *thread_pool_runner(void *args) {
   tp->thread_count--;
   pthread_cond_signal(&tp->cond_can_exit);
   pthread_mutex_unlock(
-      &tp->mutex_task_list); // unlock when exit <- if tp->can_exit break
+      &tp->mutex_task_list);  // unlock when exit <- if tp->can_exit break
   return NULL;
 }
 

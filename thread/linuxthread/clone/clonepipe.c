@@ -11,6 +11,8 @@
 #include <sys/utsname.h>
 #include <sys/wait.h>
 
+#include <inttypes.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -87,7 +89,7 @@ int main(int argc, char *argv[]) {
   pid = clone(childFunc, stackTop, SIGCHLD, (void *)pipefd);
   if (pid == -1)
     errExit("p: clone");
-  printf("clone() returned %ld\n", (long)pid);
+  printf("clone() returned %" PRId32 "\n", (int32_t)pid);
 
   /* Parent falls through to here */
 

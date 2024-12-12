@@ -9,7 +9,6 @@ int ctx = 0;
 ucontext_t context, *cp = &context;
 
 int main(void) {
-
   getcontext(cp);
   printf("User mode context obtained!\n");
   print_ucontext(cp);

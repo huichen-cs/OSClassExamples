@@ -12,7 +12,6 @@ extern double *part_sums; /* this data is also shared by the threads */
 
 /* The thread will execute in this function */
 void *part_sum_runner(void *param) {
-
   int worker_idx = *((int *)param);
 
   double sum = 0.0;

@@ -1,4 +1,6 @@
+#include <inttypes.h>
 #include <pthread.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -6,9 +8,9 @@
 #include "part_sum.h"
 #include "util.h"
 
-int *numbers;         /* this data is shared by the threads      */
-int *indices;         /* this data is also shared by the threads */
-long long *part_sums; /* this data is also shared by the threads */
+int *numbers;       /* this data is shared by the threads      */
+int *indices;       /* this data is also shared by the threads */
+int64_t *part_sums; /* this data is also shared by the threads */
 
 static int *worker_indices;
 
@@ -38,7 +40,7 @@ int main(int argc, char *argv[]) {
   pthread_attr_t *attrs; /* set of thread attributes */
 
   /* create the threads and distribute work among the threads  */
-  part_sums = (long long *)malloc(sizeof(long long) * num_threads);
+  part_sums = (int64_t *)malloc(sizeof(int64_t) * num_threads);
   indices = (int *)malloc(sizeof(int) * (num_threads * 2));
   worker_indices = (int *)malloc(sizeof(int) * num_threads);
   tids = (pthread_t *)malloc(sizeof(pthread_t) * num_threads);
@@ -70,11 +72,11 @@ int main(int argc, char *argv[]) {
     pthread_join(tids[i], NULL);
   }
 
-  long long sum = 0ll;
+  int64_t sum = 0LL;
   for (int i = 0; i < num_threads; i++) {
     sum += part_sums[i];
   }
-  printf("sum = %lld\n", sum);
+  printf("sum = %" PRId64 "\n", sum);
 
   free(numbers);
   free(part_sums);

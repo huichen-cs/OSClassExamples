@@ -4,20 +4,21 @@
 #include <sys/types.h>
 #include <unistd.h>
 
+#include <inttypes.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 
 #include "worker.h"
 extern struct thread_info *tinfo;
 
-static long long estimatepi(long long maxiters, unsigned int xseed,
-                            unsigned yseed);
+static int64_t estimatepi(int64_t maxiters, unsigned int xseed, unsigned yseed);
 
 void *piworker(void *param) {
   int tnum = *(int *)param;
   double *pi;
-  long long accepted;
-  long long maxiter = tinfo[tnum].maxiter;
+  int64_t accepted;
+  int64_t maxiter = tinfo[tnum].maxiter;
   int seedx = tinfo[tnum].seedx;
   int seedy = tinfo[tnum].seedy;
 
@@ -32,8 +33,8 @@ void *piworker(void *param) {
   return pi;
 }
 
-static long long estimatepi(long long maxiters, unsigned int xseed,
-                            unsigned yseed) {
+static int64_t estimatepi(int64_t maxiters, unsigned int xseed,
+                          unsigned yseed) {
   /*
    * A simple Monte Carlo method:
    *
@@ -55,8 +56,8 @@ static long long estimatepi(long long maxiters, unsigned int xseed,
 
   double x;
   double y;
-  long long iter;
-  long long accepted = 0;
+  int64_t iter;
+  int64_t accepted = 0;
 
   char xstate[256];
   char ystate[256];
@@ -77,8 +78,8 @@ static long long estimatepi(long long maxiters, unsigned int xseed,
   }
 
   pi = (double)accepted / (double)maxiters * 4.0;
-  printf("\tworker at pid=%d: accepted = %lld pi = %lf\n", getpid(), accepted,
-         pi);
+  printf("\tworker at pid=%d: accepted = %" PRId64 " pi = %lf\n", getpid(),
+         accepted, pi);
 
   return accepted;
 }

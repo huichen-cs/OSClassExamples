@@ -1,12 +1,12 @@
+#include <cstdint>
 #include <iostream>
-using namespace std;
 
 // static int* mk_rand_nums(int n);
 static int *mk_nums(int n);
 
 int main(int argc, char *argv[]) {
   if (argc < 2) {
-    cout << "Usage: sumall <number of integers>" << endl;
+    std::cout << "Usage: sumall <number of integers>" << std::endl;
     return 0;
   }
 
@@ -15,12 +15,12 @@ int main(int argc, char *argv[]) {
 
   // int* numbers = mk_rand_nums(n);
   int *numbers = mk_nums(n);
-  long long sum = 0l;
+  int64_t sum = 0l;
 #pragma omp parallel for reduction(+ : sum)
   for (int i = 0; i < n; i++) {
     sum += numbers[i];
   }
-  cout << "The sum is " << sum << endl;
+  std::cout << "The sum is " << sum << std::endl;
 
   free(numbers);
   return 0;

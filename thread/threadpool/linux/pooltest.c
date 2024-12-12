@@ -1,11 +1,13 @@
+#include <inttypes.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <threadpool.h>
 #include <unistd.h>
 
 void *print_message(void *args) {
   for (int i = 0; i < 100; i++) {
-    long i = (long)args;
-    printf("Hello from thread %ld\n", i);
+    int32_t i = (intptr_t)args;
+    printf("Hello from thread %" PRId32 "\n", i);
     usleep(50000);
   }
   return NULL;
@@ -17,7 +19,7 @@ int main(int argc, char *argv[]) {
   // printf("2.-------------------\n");
 
   for (int i = 0; i < 100; i++) {
-    thread_pool_add_task(tp, &print_message, (void *)((long)i));
+    thread_pool_add_task(tp, &print_message, (void *)((intptr_t)i));
   }
 
   thread_pool_wait(tp);

@@ -1,13 +1,15 @@
 #ifndef __PI_WORKER__
 #define __PI_WORKER__
 
+#include <stdint.h>
+
 struct thread_info {
   pthread_t thread_id; /* ID returned by pthread_create() */
   int thread_num;      /* Application-defined thread # */
-  long long maxiter;
+  int64_t maxiter;
   int seedx;
   int seedy;
-  long long accepted;
+  int64_t accepted;
 };
 
 void *piworker(void *thread_num);

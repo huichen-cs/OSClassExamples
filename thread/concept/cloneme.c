@@ -8,7 +8,7 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
-const int STACK_SIZE = 1 << 21; // 2 MB
+const int STACK_SIZE = 1 << 21;  // 2 MB
 
 int state = 0;
 
@@ -43,8 +43,8 @@ int main(int argc, char *argv[]) {
     printf("Parent[pid = %d]: clone returned %d\n", getpid(), pid);
     // sleep(1);
     // wait for the child to exit
-    while ((w = waitpid(pid, &wstatus, 0)) > 0)
-      ;
+    while ((w = waitpid(pid, &wstatus, 0)) > 0) {
+    }
     printf("Parent[pid = %d]: after child exited: state = %d\n", getpid(),
            state);
   }

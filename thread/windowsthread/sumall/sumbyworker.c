@@ -10,7 +10,6 @@ DWORD Sum; /* data is shared by the thread(s) */
 
 /* The thread will execute in this function */
 DWORD WINAPI Summation(LPVOID Param) {
-
   DWORD Upper = *(DWORD *)Param;
 
   for (DWORD i = 1; i <= Upper; i++) {
@@ -21,7 +20,6 @@ DWORD WINAPI Summation(LPVOID Param) {
 }
 
 int main(int argc, char *argv[]) {
-
   DWORD ThreadId;
   HANDLE ThreadHandle;
   int Param;

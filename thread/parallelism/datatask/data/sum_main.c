@@ -1,4 +1,5 @@
 #include <pthread.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -38,7 +39,7 @@ int main(int argc, char *argv[]) {
   pthread_attr_t *attrs; /* set of thread attributes */
 
   /* create the threads and distribute work among the threads  */
-  part_sums = (long long *)malloc(sizeof(long long) * num_threads);
+  part_sums = (double *)malloc(sizeof(double) * num_threads);
   indices = (int *)malloc(sizeof(int) * (num_threads * 2));
   worker_indices = (int *)malloc(sizeof(int) * num_threads);
   tids = (pthread_t *)malloc(sizeof(pthread_t) * num_threads);

@@ -31,7 +31,6 @@ static void func2(void) {
 }
 
 int main(int argc, char *argv[]) {
-
   char func1_stack[16384];
   char func2_stack[16384];
 
