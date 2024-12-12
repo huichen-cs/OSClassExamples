@@ -1,10 +1,11 @@
+#include <inttypes.h>
 #include <stdio.h>
 
 int main() {
-  long numbers[5] = {1, 2, 4, 8, 16};
+  int32_t numbers[5] = {1, 2, 4, 8, 16};
 
   for (int i = 0; i < 5; i++) {
-    printf("%ld\n", numbers[i]);
+    printf("%" SCNd32 "\n", numbers[i]);
   }
 
   return 0;

@@ -1,12 +1,12 @@
+#include <inttypes.h>
 #include <stdio.h>
 
 int main() {
-
-  long sum = 0l;
-  long n;
+  int32_t sum = 0l;
+  int32_t n;
   int count = 0;
 
-  while (EOF != scanf("%ld", &n)) {
+  while (EOF != scanf("%" SCNd32, &n)) {
     sum += n;
     count++;
   }

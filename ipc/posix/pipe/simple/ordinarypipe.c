@@ -10,7 +10,6 @@
 #define WRITE_END 1
 
 int main(void) {
-
   char write_msg[BUFFER_SIZE] = "Greetings";
   char read_msg[BUFFER_SIZE];
 

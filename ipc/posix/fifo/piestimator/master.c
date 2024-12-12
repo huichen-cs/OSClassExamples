@@ -4,6 +4,8 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
+#include <inttypes.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -11,7 +13,7 @@
 
 int main(int argc, char *argv[]) {
   pid_t pid, wpid;
-  long long *maxiter, accepted, trials = 0, totalaccepted = 0;
+  int64_t *maxiter, accepted, trials = 0, totalaccepted = 0;
   int *seedx, *seedy, fifofd, status, nprocesses, i;
   char maxiterbuf[128], seedxbuf[128], seedybuf[128],
       *piworkfifo = PI_WORK_FIFO;
@@ -33,7 +35,7 @@ int main(int argc, char *argv[]) {
     exit(EXIT_SUCCESS);
   }
 
-  maxiter = (long long *)malloc(sizeof(long long) * nprocesses);
+  maxiter = (int64_t *)malloc(sizeof(int64_t) * nprocesses);
   seedx = (int *)malloc(sizeof(int) * nprocesses);
   seedy = (int *)malloc(sizeof(int) * nprocesses);
   if (maxiter == NULL || seedx == NULL || seedy == NULL) {
@@ -42,13 +44,13 @@ int main(int argc, char *argv[]) {
   }
 
   for (i = 0; i < nprocesses; i++) {
-    sscanf(argv[2 + 3 * i], "%lld", maxiter + i);
+    sscanf(argv[2 + 3 * i], "%" SCNd64, maxiter + i);
     sscanf(argv[2 + 3 * i + 1], "%d", seedx + i);
     sscanf(argv[2 + 3 * i + 2], "%d", seedy + i);
   }
 
   for (i = 0; i < nprocesses; i++) {
-    printf("Read from the command line for process(%d): %lld %d %d\n", i,
+    printf("Read from the command line for process(%d): %" PRId64 " %d %d\n", i,
            maxiter[i], seedx[i], seedy[i]);
   }
 
@@ -74,7 +76,7 @@ int main(int argc, char *argv[]) {
       exit(1);
     } else if (pid == 0) { /* child */
       printf("Child is forked at: PID=%d\n", getpid());
-      snprintf(maxiterbuf, sizeof(maxiterbuf), "%lld", maxiter[i]);
+      snprintf(maxiterbuf, sizeof(maxiterbuf), "%" SCNd64, maxiter[i]);
       snprintf(seedxbuf, sizeof(seedxbuf), "%d", seedx[i]);
       snprintf(seedybuf, sizeof(seedybuf), "%d", seedy[i]);
       printf("\trun worker %d as worker %s %s %s\n", i, maxiterbuf, seedxbuf,
@@ -83,16 +85,18 @@ int main(int argc, char *argv[]) {
     }
   }
 
-  while ((wpid = wait(&status)) > 0)
-    ; /* block parent */
+  while ((wpid = wait(&status)) > 0) {
+    /* block parent */
+  }
 
   for (i = 0; i < nprocesses; i++) {
     trials += maxiter[i];
-    read(fifofd, &accepted, sizeof(long long));
-    printf("accepted = %lld\n", accepted);
+    read(fifofd, &accepted, sizeof(int64_t));
+    printf("accepted = %" PRId64 "\n", accepted);
     totalaccepted += accepted;
   }
-  printf("max trials = %lld total accepted = %lld\n", trials, totalaccepted);
+  printf("max trials = %" PRId64 " total accepted = %" PRId64 "\n", trials,
+         totalaccepted);
   pi = (double)totalaccepted / (double)trials * 4.0;
   printf("In parent: estimated pi = %lf\n", pi);
 

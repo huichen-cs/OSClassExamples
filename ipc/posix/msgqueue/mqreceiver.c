@@ -15,8 +15,8 @@ int main(int argc, char *argv[]) {
   attr.mq_flags = 0;              /* Flags (ignored for mq_open()) */
   attr.mq_maxmsg = 10;            /* Max. # of messages on queue */
   attr.mq_msgsize = MAX_MSG_SIZE; /* Max. message size (bytes) */
-  attr.mq_curmsgs = 0;            /* # of messages currently in queue
-                                     (ignored for mq_open()) */
+  attr.mq_curmsgs = 0;            // # of messages currently in queue
+                                  //  (ignored for mq_open())
 
   mqd = mq_open(MQ_NAME, O_RDWR | O_CREAT, 0644, &attr);
   if (-1 == mqd) {

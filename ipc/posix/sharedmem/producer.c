@@ -15,7 +15,6 @@
 #include <unistd.h>
 
 int main() {
-
   /* the size (in bytes) of shared memory object */
   const int SIZE = 4096;
 
