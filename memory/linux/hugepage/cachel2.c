@@ -2,7 +2,7 @@
  * This is from
  * https://en.wikipedia.org/wiki/CPUID#EAX=80000006h:_Extended_L2_Cache_Features
  */
-#include <cpuid.h> // GCC-provided
+#include <cpuid.h>  // GCC-provided
 #include <stdint.h>
 #include <stdio.h>
 

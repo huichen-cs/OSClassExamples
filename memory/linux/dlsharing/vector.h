@@ -3,12 +3,12 @@
 
 #include <iostream>
 
-namespace cisc3320 {
+namespace osclasses {
 class Vector;
 }
-std::ostream &operator<<(std::ostream &os, const cisc3320::Vector &v);
+std::ostream &operator<<(std::ostream &os, const osclasses::Vector &v);
 
-namespace cisc3320 {
+namespace osclasses {
 class Vector {
 public:
   double dotProduct(const Vector v) const;
@@ -21,9 +21,9 @@ protected:
 
 class RandomVector : public Vector {
 public:
-  RandomVector(const int size);
+  explicit RandomVector(const int size);
   ~RandomVector();
 };
-} // namespace cisc3320
+}  // namespace osclasses
 
 #endif

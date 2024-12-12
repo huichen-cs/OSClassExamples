@@ -2,9 +2,7 @@
 #include <cstdlib>
 #include <stdexcept>
 
-using namespace cisc3320;
-
-double Vector::dotProduct(Vector v) const {
+double osclasses::Vector::dotProduct(Vector v) const {
   if (size != v.size) {
     throw std::runtime_error("Vector sizes do not gree.");
   }
@@ -17,7 +15,7 @@ double Vector::dotProduct(Vector v) const {
   return sum;
 }
 
-std::ostream &operator<<(std::ostream &os, const Vector &v) {
+std::ostream &operator<<(std::ostream &os, const osclasses::Vector &v) {
   os << "{size=" << v.size << ","
      << "values=[";
   for (int i = 0; i < v.size; i++) {
@@ -29,7 +27,7 @@ std::ostream &operator<<(std::ostream &os, const Vector &v) {
   return os;
 }
 
-RandomVector::RandomVector(const int size) {
+osclasses::RandomVector::RandomVector(const int size) {
   this->size = size;
   value = new double[size];
   for (int i = 0; i < size; i++) {
@@ -37,4 +35,4 @@ RandomVector::RandomVector(const int size) {
   }
 }
 
-RandomVector::~RandomVector() { delete[] value; }
+osclasses::RandomVector::~RandomVector() { delete[] value; }
