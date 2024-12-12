@@ -1,21 +1,22 @@
+#include <inttypes.h>
 #include <stdio.h>
 #include <stdlib.h>
 
-static double estimatepi(long maxiters, unsigned int);
+static double estimatepi(int32_t maxiters, unsigned int);
 
 int main(int argc, char *argv[]) {
-  long maxiter = 10000000;
+  int32_t maxiter = 10000000;
   unsigned int seed = 12345;
 
   if (argc > 2) {
-    sscanf(argv[1], "%ld", &maxiter);
+    sscanf(argv[1], "%" SCNd32, &maxiter);
     sscanf(argv[2], "%d", &seed);
   }
-  printf("worker: maxiter = %ld seed = %d\n", maxiter, seed);
+  printf("worker: maxiter = %" PRId32 " seed = %d\n", maxiter, seed);
   printf("worker: pi = %lf\n", estimatepi(10000000, 12345));
 }
 
-static double estimatepi(long maxiters, unsigned int seed) {
+static double estimatepi(int32_t maxiters, unsigned int seed) {
   /*
    * A simple Monte Carlo method:
    *
@@ -37,8 +38,8 @@ static double estimatepi(long maxiters, unsigned int seed) {
 
   double x;
   double y;
-  long iter;
-  long accepted = 0;
+  int32_t iter;
+  int32_t accepted = 0;
 
   /*
    * The choice of random number generation process

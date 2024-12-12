@@ -3,16 +3,18 @@
 #include <sys/types.h>
 #include <unistd.h>
 
+#include <inttypes.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 
 #include "workfifo.h"
 
-static double estimatepi(int fifofd, long long maxiters, unsigned int,
+static double estimatepi(int fifofd, int64_t maxiters, unsigned int,
                          unsigned int);
 
 int main(int argc, char *argv[]) {
-  long long maxiter = 10000000;
+  int64_t maxiter = 10000000;
   unsigned int xseed = 12345;
   unsigned int yseed = 54321;
   int fifofd;
@@ -20,12 +22,12 @@ int main(int argc, char *argv[]) {
   double pi;
 
   if (argc > 3) {
-    sscanf(argv[1], "%lld", &maxiter);
+    sscanf(argv[1], "%" SCNd64, &maxiter);
     sscanf(argv[2], "%d", &xseed);
     sscanf(argv[3], "%d", &yseed);
   }
-  printf("\tworker at %d: maxiter = %lld xseed = %d yseed = %d\n", getpid(),
-         maxiter, xseed, yseed);
+  printf("\tworker at %d: maxiter = %" PRId64 " xseed = %d yseed = %d\n",
+         getpid(), maxiter, xseed, yseed);
 
   fifofd = open(piworkfifo, O_RDWR);
   if (fifofd == -1) {
@@ -40,7 +42,7 @@ int main(int argc, char *argv[]) {
   close(fifofd);
 }
 
-static double estimatepi(int fifofd, long long maxiters, unsigned int xseed,
+static double estimatepi(int fifofd, int64_t maxiters, unsigned int xseed,
                          unsigned yseed) {
   /*
    * A simple Monte Carlo method:
@@ -63,8 +65,8 @@ static double estimatepi(int fifofd, long long maxiters, unsigned int xseed,
 
   double x;
   double y;
-  long long iter;
-  long long accepted = 0;
+  int64_t iter;
+  int64_t accepted = 0;
 
   struct random_data xbuf = {.state = NULL};
   struct random_data ybuf = {.state = NULL};
@@ -89,9 +91,9 @@ static double estimatepi(int fifofd, long long maxiters, unsigned int xseed,
     }
   }
 
-  printf("\tworker at pid=%d: accepted = %lld\n", getpid(), accepted);
+  printf("\tworker at pid=%d: accepted = %" PRId64 "\n", getpid(), accepted);
 
-  if (write(fifofd, &accepted, sizeof(long long)) == -1) {
+  if (write(fifofd, &accepted, sizeof(int64_t)) == -1) {
     perror("\twrite");
     exit(EXIT_FAILURE);
   }

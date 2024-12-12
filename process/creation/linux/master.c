@@ -2,18 +2,20 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
+#include <inttypes.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 
 int main(int argc, char *argv[]) {
   pid_t pid;
-  long maxiter = 10000000;
+  int32_t maxiter = 10000000L;
   char maxiterbuf[128];
 
   if (argc > 1) {
-    sscanf(argv[1], "%ld", &maxiter);
+    sscanf(argv[1], "%" SCNd32, &maxiter);
   }
-  snprintf(maxiterbuf, sizeof(maxiterbuf), "%ld", maxiter);
+  snprintf(maxiterbuf, sizeof(maxiterbuf), "%" SCNd32, maxiter);
   printf("Parent starts at: PID=%d\n", getpid());
 
   /* fork a child process. see manual: man 2 fork */

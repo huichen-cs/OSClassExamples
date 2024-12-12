@@ -1,24 +1,26 @@
+#include <inttypes.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 
-static double estimatepi(long maxiters, unsigned int, unsigned int);
+static double estimatepi(int32_t maxiters, unsigned int, unsigned int);
 
 int main(int argc, char *argv[]) {
-  long maxiter = 10000000;
+  int32_t maxiter = 10000000;
   unsigned int xseed = 12345;
   unsigned int yseed = 54321;
 
   if (argc > 3) {
-    sscanf(argv[1], "%ld", &maxiter);
+    sscanf(argv[1], "%" SCNd32, &maxiter);
     sscanf(argv[2], "%d", &xseed);
     sscanf(argv[3], "%d", &yseed);
   }
-  printf("worker: maxiter = %ld xseed = %d yseed = %d\n", maxiter, xseed,
-         yseed);
+  printf("worker: maxiter = %" PRId32 " xseed = %d yseed = %d\n", maxiter,
+         xseed, yseed);
   printf("worker: pi = %lf\n", estimatepi(maxiter, xseed, yseed));
 }
 
-static double estimatepi(long maxiters, unsigned int xseed, unsigned yseed) {
+static double estimatepi(int32_t maxiters, unsigned int xseed, unsigned yseed) {
   /*
    * A simple Monte Carlo method:
    *
@@ -40,8 +42,8 @@ static double estimatepi(long maxiters, unsigned int xseed, unsigned yseed) {
 
   double x;
   double y;
-  long iter;
-  long accepted = 0;
+  int32_t iter;
+  int32_t accepted = 0;
 
   char xstate[256];
   char ystate[256];
