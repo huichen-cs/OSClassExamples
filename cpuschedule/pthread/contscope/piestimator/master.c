@@ -1,6 +1,8 @@
 #include <ctype.h>
 #include <errno.h>
+#include <inttypes.h>
 #include <pthread.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -17,7 +19,7 @@ struct thread_info *tinfo;
  * another example worth investigating is in pthread_attr_init(3)
  */
 int main(int argc, char *argv[]) {
-  long long totalaccepted = 0, trials = 0;
+  int64_t totalaccepted = 0, trials = 0;
   int scope, tnum, num_threads, status;
   pthread_attr_t attr;
   void *res;
@@ -47,7 +49,7 @@ int main(int argc, char *argv[]) {
 
   gsl_rng_env_setup();
   for (tnum = 0; tnum < num_threads; tnum++) {
-    sscanf(argv[2 + 3 * tnum], "%lld", &(tinfo[tnum].maxiter));
+    sscanf(argv[2 + 3 * tnum], "%" SCNd64, &(tinfo[tnum].maxiter));
     sscanf(argv[2 + 3 * tnum + 1], "%d", &(tinfo[tnum].seedx));
     sscanf(argv[2 + 3 * tnum + 2], "%d", &(tinfo[tnum].seedy));
     tinfo[tnum].rngx = gsl_rng_alloc(gsl_rng_default);
@@ -57,8 +59,8 @@ int main(int argc, char *argv[]) {
   }
 
   for (tnum = 0; tnum < num_threads; tnum++) {
-    printf("Read from the command line for thread(%d): %lld %d %d\n", tnum,
-           tinfo[tnum].maxiter, tinfo[tnum].seedx, tinfo[tnum].seedy);
+    printf("Read from the command line for thread(%d): %" SCNd64 " %d %d\n",
+           tnum, tinfo[tnum].maxiter, tinfo[tnum].seedx, tinfo[tnum].seedy);
   }
 
   /* run threads: multiple steps */
@@ -125,7 +127,8 @@ int main(int argc, char *argv[]) {
     totalaccepted += tinfo[tnum].accepted;
     trials += tinfo[tnum].maxiter;
   }
-  printf("max trials = %lld total accepted = %lld\n", trials, totalaccepted);
+  printf("max trials = %" PRId64 " total accepted = %" PRId64 "\n", trials,
+         totalaccepted);
   pi = (double)totalaccepted / (double)trials * 4.0;
   printf("In parent: estimated pi = %lf\n", pi);
 
