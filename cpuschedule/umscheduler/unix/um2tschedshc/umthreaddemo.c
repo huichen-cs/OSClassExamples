@@ -1,4 +1,5 @@
 #include <signal.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -8,10 +9,10 @@
 #include <unistd.h>
 
 /* stack size for scheduler and user threads */
-static const long STACK_SIZE = (1 << 14);
+static const int32_t STACK_SIZE = (1 << 14);
 
 /* scheduler */
-static const long NS_TO_FIRE_TIMER = 100000;
+static const int32_t NS_TO_FIRE_TIMER = 100000;
 static void *timerhandler_stack;
 static void run_scheduler();
 static void make_timerhandler_context();

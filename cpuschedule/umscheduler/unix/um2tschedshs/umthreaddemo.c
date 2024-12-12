@@ -1,4 +1,5 @@
 #include <signal.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -8,8 +9,8 @@
 #include <unistd.h>
 
 /* scheduler */
-static const long NS_TO_FIRE_TIMER = 100000;
-static const long STACK_SIZE = (1 << 14);
+static const int32_t NS_TO_FIRE_TIMER = 100000;
+static const int32_t STACK_SIZE = (1 << 14);
 
 static void *timerhandler_stack;
 
@@ -27,7 +28,6 @@ static void hello_world();
 static ucontext_t timerhandler_context, hu_context, hw_context, *active_context;
 
 int main(int argc, char *argv[]) {
-
   /* prepare contexts for two user threads running two functions
    * concurrently */
   make_hu_context();

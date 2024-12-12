@@ -1,5 +1,7 @@
 #define _GNU_SOURCE /* register constants */
+#include <inttypes.h>
 #include <signal.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -11,10 +13,10 @@
 #include "printctx.h"
 
 /* stack size for scheduler and user threads */
-static const long STACK_SIZE = (1 << 14);
+static const int32_t STACK_SIZE = (1 << 14);
 
 /* scheduler */
-static const long NS_TO_FIRE_TIMER = 100000;
+static const int32_t NS_TO_FIRE_TIMER = 100000;
 static void *timerhandler_stack;
 static void run_scheduler();
 static void make_timerhandler_context();
@@ -27,7 +29,6 @@ static void make_hu_context();
 static void hello_user();
 static void hu_stub();
 static int hu_exited;
-
 static void *hw_stack;
 static void make_hw_context();
 static void hello_world();
@@ -78,7 +79,7 @@ int main(int argc, char *argv[]) {
   itv.it_interval.tv_usec = NS_TO_FIRE_TIMER;
   itv.it_value = itv.it_interval;
   setitimer(ITIMER_REAL, &itv, NULL);
-  printf("\tSet up timer that is to fire every %ld nanoseconds\n",
+  printf("\tSet up timer that is to fire every %" PRId32 " nanoseconds\n",
          NS_TO_FIRE_TIMER);
 
   /* activate the first context */

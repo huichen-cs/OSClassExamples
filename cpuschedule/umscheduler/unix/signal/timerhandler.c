@@ -1,5 +1,6 @@
 #include <assert.h>
 #include <signal.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -8,8 +9,7 @@
 
 static void alarmhandler(int signal);
 
-static const long TIME_TO_SLEEP_IN_NS = 100000000;
-;
+static const int32_t TIME_TO_SLEEP_IN_NS = 100000000;
 
 int main(int argc, char **argv) {
   pid_t pid;
