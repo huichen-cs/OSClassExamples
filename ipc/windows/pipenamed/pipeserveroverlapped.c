@@ -39,13 +39,12 @@ int _tmain(VOID) {
   // each instance.
 
   for (i = 0; i < INSTANCES; i++) {
-
     // Create an event object for this instance.
 
-    hEvents[i] = CreateEvent(NULL,  // default security attribute
-                             TRUE,  // manual-reset event
-                             TRUE,  // initial state = signaled
-                             NULL); // unnamed event object
+    hEvents[i] = CreateEvent(NULL,   // default security attribute
+                             TRUE,   // manual-reset event
+                             TRUE,   // initial state = signaled
+                             NULL);  // unnamed event object
 
     if (hEvents[i] == NULL) {
       printf("CreateEvent failed with %d.\n", GetLastError());
@@ -55,17 +54,17 @@ int _tmain(VOID) {
     Pipe[i].oOverlap.hEvent = hEvents[i];
 
     Pipe[i].hPipeInst =
-        CreateNamedPipe(lpszPipename,               // pipe name
-                        PIPE_ACCESS_DUPLEX |        // read/write access
-                            FILE_FLAG_OVERLAPPED,   // overlapped mode
-                        PIPE_TYPE_MESSAGE |         // message-type pipe
-                            PIPE_READMODE_MESSAGE | // message-read mode
-                            PIPE_WAIT,              // blocking mode
-                        INSTANCES,                  // number of instances
-                        BUFSIZE * sizeof(TCHAR),    // output buffer size
-                        BUFSIZE * sizeof(TCHAR),    // input buffer size
-                        PIPE_TIMEOUT,               // client time-out
-                        NULL); // default security attributes
+        CreateNamedPipe(lpszPipename,                // pipe name
+                        PIPE_ACCESS_DUPLEX |         // read/write access
+                            FILE_FLAG_OVERLAPPED,    // overlapped mode
+                        PIPE_TYPE_MESSAGE |          // message-type pipe
+                            PIPE_READMODE_MESSAGE |  // message-read mode
+                            PIPE_WAIT,               // blocking mode
+                        INSTANCES,                   // number of instances
+                        BUFSIZE * sizeof(TCHAR),     // output buffer size
+                        BUFSIZE * sizeof(TCHAR),     // input buffer size
+                        PIPE_TIMEOUT,                // client time-out
+                        NULL);  // default security attributes
 
     if (Pipe[i].hPipeInst == INVALID_HANDLE_VALUE) {
       printf("CreateNamedPipe failed with %d.\n", GetLastError());
@@ -78,8 +77,8 @@ int _tmain(VOID) {
         ConnectToNewClient(Pipe[i].hPipeInst, &Pipe[i].oOverlap);
 
     Pipe[i].dwState = Pipe[i].fPendingIO ? CONNECTING_STATE
-                                         : // still connecting
-                          READING_STATE;   // ready to read
+                                         :  // still connecting
+                          READING_STATE;    // ready to read
   }
 
   while (1) {
@@ -87,14 +86,14 @@ int _tmain(VOID) {
     // completion of an overlapped read, write, or
     // connect operation.
 
-    dwWait = WaitForMultipleObjects(INSTANCES, // number of event objects
-                                    hEvents,   // array of event objects
-                                    FALSE,     // does not wait for all
-                                    INFINITE); // waits indefinitely
+    dwWait = WaitForMultipleObjects(INSTANCES,  // number of event objects
+                                    hEvents,    // array of event objects
+                                    FALSE,      // does not wait for all
+                                    INFINITE);  // waits indefinitely
 
     // dwWait shows which pipe completed the operation.
 
-    i = dwWait - WAIT_OBJECT_0; // determines which pipe
+    i = dwWait - WAIT_OBJECT_0;  // determines which pipe
     if (i < 0 || i > (INSTANCES - 1)) {
       printf("Index out of range.\n");
       return 0;
@@ -103,10 +102,10 @@ int _tmain(VOID) {
     // Get the result if the operation was pending.
 
     if (Pipe[i].fPendingIO) {
-      fSuccess = GetOverlappedResult(Pipe[i].hPipeInst, // handle to pipe
-                                     &Pipe[i].oOverlap, // OVERLAPPED structure
-                                     &cbRet,            // bytes transferred
-                                     FALSE);            // do not wait
+      fSuccess = GetOverlappedResult(Pipe[i].hPipeInst,  // handle to pipe
+                                     &Pipe[i].oOverlap,  // OVERLAPPED structure
+                                     &cbRet,             // bytes transferred
+                                     FALSE);             // do not wait
 
       switch (Pipe[i].dwState) {
         // Pending connect operation
@@ -234,8 +233,8 @@ VOID DisconnectAndReconnect(DWORD i) {
 
   Pipe[i].fPendingIO = ConnectToNewClient(Pipe[i].hPipeInst, &Pipe[i].oOverlap);
 
-  Pipe[i].dwState = Pipe[i].fPendingIO ? CONNECTING_STATE : // still connecting
-                        READING_STATE;                      // ready to read
+  Pipe[i].dwState = Pipe[i].fPendingIO ? CONNECTING_STATE :  // still connecting
+                        READING_STATE;                       // ready to read
 }
 
 // ConnectToNewClient(HANDLE, LPOVERLAPPED)

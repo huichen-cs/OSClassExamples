@@ -11,7 +11,6 @@
 #define BUFFER_SIZE 25
 
 int main(VOID) {
-
   HANDLE ReadHandle, WriteHandle;
   STARTUPINFO si;
   PROCESS_INFORMATION pi;

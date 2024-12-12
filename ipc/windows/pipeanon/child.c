@@ -10,7 +10,6 @@
 #define BUFFER_SIZE 25
 
 int main(VOID) {
-
   HANDLE ReadHandle;
   CHAR buffer[BUFFER_SIZE];
   DWORD read;

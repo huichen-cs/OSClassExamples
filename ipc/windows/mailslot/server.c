@@ -24,11 +24,11 @@ BOOL ReadSlot() {
   ov.OffsetHigh = 0;
   ov.hEvent = hEvent;
 
-  fResult = GetMailslotInfo(hSlot,          // mailslot handle
-                            (LPDWORD)NULL,  // no maximum message size
-                            &cbMessage,     // size of next message
-                            &cMessage,      // number of messages
-                            (LPDWORD)NULL); // no read time-out
+  fResult = GetMailslotInfo(hSlot,           // mailslot handle
+                            (LPDWORD)NULL,   // no maximum message size
+                            &cbMessage,      // size of next message
+                            &cMessage,       // number of messages
+                            (LPDWORD)NULL);  // no read time-out
 
   if (!fResult) {
     printf("GetMailslotInfo failed with %d.\n", GetLastError());
@@ -42,8 +42,7 @@ BOOL ReadSlot() {
 
   cAllMessages = cMessage;
 
-  while (cMessage != 0) // retrieve all messages
-  {
+  while (cMessage != 0) {  // retrieve all messages
     // Create a message-number string.
 
     StringCchPrintf((LPTSTR)achID, 80, TEXT("\nMessage #%d of %d\n"),
@@ -76,11 +75,11 @@ BOOL ReadSlot() {
 
     GlobalFree((HGLOBAL)lpszBuffer);
 
-    fResult = GetMailslotInfo(hSlot,          // mailslot handle
-                              (LPDWORD)NULL,  // no maximum message size
-                              &cbMessage,     // size of next message
-                              &cMessage,      // number of messages
-                              (LPDWORD)NULL); // no read time-out
+    fResult = GetMailslotInfo(hSlot,           // mailslot handle
+                              (LPDWORD)NULL,   // no maximum message size
+                              &cbMessage,      // size of next message
+                              &cMessage,       // number of messages
+                              (LPDWORD)NULL);  // no read time-out
 
     if (!fResult) {
       printf("GetMailslotInfo failed (%d)\n", GetLastError());
@@ -93,9 +92,9 @@ BOOL ReadSlot() {
 
 BOOL WINAPI MakeSlot(LPTSTR lpszSlotName) {
   hSlot = CreateMailslot(lpszSlotName,
-                         0,                     // no maximum message size
-                         MAILSLOT_WAIT_FOREVER, // no time-out for operations
-                         (LPSECURITY_ATTRIBUTES)NULL); // default security
+                         0,                      // no maximum message size
+                         MAILSLOT_WAIT_FOREVER,  // no time-out for operations
+                         (LPSECURITY_ATTRIBUTES)NULL);  // default security
 
   if (hSlot == INVALID_HANDLE_VALUE) {
     printf("CreateMailslot failed with %d\n", GetLastError());

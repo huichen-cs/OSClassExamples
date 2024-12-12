@@ -13,20 +13,20 @@ int _tmain() {
   LPCTSTR pBuf;
 
   hMapFile =
-      CreateFileMapping(INVALID_HANDLE_VALUE, // use paging file
-                        NULL,                 // default security
-                        PAGE_READWRITE,       // read/write access
-                        0,        // maximum object size (high-order DWORD)
-                        BUF_SIZE, // maximum object size (low-order DWORD)
-                        szName);  // name of mapping object
+      CreateFileMapping(INVALID_HANDLE_VALUE,  // use paging file
+                        NULL,                  // default security
+                        PAGE_READWRITE,        // read/write access
+                        0,         // maximum object size (high-order DWORD)
+                        BUF_SIZE,  // maximum object size (low-order DWORD)
+                        szName);   // name of mapping object
 
   if (hMapFile == NULL) {
     _tprintf(TEXT("Could not create file mapping object (%d).\n"),
              GetLastError());
     return 1;
   }
-  pBuf = (LPTSTR)MapViewOfFile(hMapFile,            // handle to map object
-                               FILE_MAP_ALL_ACCESS, // read/write permission
+  pBuf = (LPTSTR)MapViewOfFile(hMapFile,             // handle to map object
+                               FILE_MAP_ALL_ACCESS,  // read/write permission
                                0, 0, BUF_SIZE);
 
   if (pBuf == NULL) {

@@ -34,10 +34,10 @@ int _tmain(VOID) {
 
   // Create one event object for the connect operation.
 
-  hConnectEvent = CreateEvent(NULL,  // default security attribute
-                              TRUE,  // manual reset event
-                              TRUE,  // initial state = signaled
-                              NULL); // unnamed event object
+  hConnectEvent = CreateEvent(NULL,   // default security attribute
+                              TRUE,   // manual reset event
+                              TRUE,   // initial state = signaled
+                              NULL);  // unnamed event object
 
   if (hConnectEvent == NULL) {
     printf("CreateEvent failed with %d.\n", GetLastError());
@@ -56,22 +56,19 @@ int _tmain(VOID) {
     // operation to be completed, which causes a completion
     // routine to be queued for execution.
 
-    dwWait = WaitForSingleObjectEx(hConnectEvent, // event object to wait for
-                                   INFINITE,      // waits indefinitely
-                                   TRUE);         // alertable wait enabled
+    dwWait = WaitForSingleObjectEx(hConnectEvent,  // event object to wait for
+                                   INFINITE,       // waits indefinitely
+                                   TRUE);          // alertable wait enabled
 
+    // The wait conditions are satisfied by a completed connect operation.
     switch (dwWait) {
-      // The wait conditions are satisfied by a completed connect
-      // operation.
     case 0:
-      // If an operation is pending, get the result of the
-      // connect operation.
-
       if (fPendingIO) {
-        fSuccess = GetOverlappedResult(hPipe,     // pipe handle
-                                       &oConnect, // OVERLAPPED structure
-                                       &cbRet,    // bytes transferred
-                                       FALSE);    // does not wait
+        // If an operation is pending, get the result of the connect operation.
+        fSuccess = GetOverlappedResult(hPipe,      // pipe handle
+                                       &oConnect,  // OVERLAPPED structure
+                                       &cbRet,     // bytes transferred
+                                       FALSE);     // does not wait
         if (!fSuccess) {
           printf("ConnectNamedPipe (%d)\n", GetLastError());
           return 0;
@@ -79,7 +76,6 @@ int _tmain(VOID) {
       }
 
       // Allocate storage for this instance.
-
       lpPipeInst = (LPPIPEINST)GlobalAlloc(GPTR, sizeof(PIPEINST));
       if (lpPipeInst == NULL) {
         printf("GlobalAlloc failed (%d)\n", GetLastError());
@@ -189,11 +185,9 @@ VOID DisconnectAndClose(LPPIPEINST lpPipeInst) {
   }
 
   // Close the handle to the pipe instance.
-
   CloseHandle(lpPipeInst->hPipeInst);
 
   // Release the storage for the pipe instance.
-
   if (lpPipeInst != NULL)
     GlobalFree(lpPipeInst);
 }
@@ -206,17 +200,17 @@ VOID DisconnectAndClose(LPPIPEINST lpPipeInst) {
 BOOL CreateAndConnectInstance(LPOVERLAPPED lpoOverlap) {
   LPTSTR lpszPipename = TEXT("\\\\.\\pipe\\mynamedpipe");
 
-  hPipe = CreateNamedPipe(lpszPipename,               // pipe name
-                          PIPE_ACCESS_DUPLEX |        // read/write access
-                              FILE_FLAG_OVERLAPPED,   // overlapped mode
-                          PIPE_TYPE_MESSAGE |         // message-type pipe
-                              PIPE_READMODE_MESSAGE | // message read mode
-                              PIPE_WAIT,              // blocking mode
-                          PIPE_UNLIMITED_INSTANCES,   // unlimited instances
-                          BUFSIZE * sizeof(TCHAR),    // output buffer size
-                          BUFSIZE * sizeof(TCHAR),    // input buffer size
-                          PIPE_TIMEOUT,               // client time-out
-                          NULL); // default security attributes
+  hPipe = CreateNamedPipe(lpszPipename,                // pipe name
+                          PIPE_ACCESS_DUPLEX |         // read/write access
+                              FILE_FLAG_OVERLAPPED,    // overlapped mode
+                          PIPE_TYPE_MESSAGE |          // message-type pipe
+                              PIPE_READMODE_MESSAGE |  // message read mode
+                              PIPE_WAIT,               // blocking mode
+                          PIPE_UNLIMITED_INSTANCES,    // unlimited instances
+                          BUFSIZE * sizeof(TCHAR),     // output buffer size
+                          BUFSIZE * sizeof(TCHAR),     // input buffer size
+                          PIPE_TIMEOUT,                // client time-out
+                          NULL);  // default security attributes
   if (hPipe == INVALID_HANDLE_VALUE) {
     printf("CreateNamedPipe failed with %d.\n", GetLastError());
     return 0;

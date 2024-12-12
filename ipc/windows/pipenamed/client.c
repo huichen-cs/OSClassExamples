@@ -19,14 +19,14 @@ int _tmain(int argc, TCHAR *argv[]) {
   // Try to open a named pipe; wait for it, if necessary.
 
   while (1) {
-    hPipe = CreateFile(lpszPipename,  // pipe name
-                       GENERIC_READ | // read and write access
+    hPipe = CreateFile(lpszPipename,   // pipe name
+                       GENERIC_READ |  // read and write access
                            GENERIC_WRITE,
-                       0,             // no sharing
-                       NULL,          // default security attributes
-                       OPEN_EXISTING, // opens existing pipe
-                       0,             // default attributes
-                       NULL);         // no template file
+                       0,              // no sharing
+                       NULL,           // default security attributes
+                       OPEN_EXISTING,  // opens existing pipe
+                       0,              // default attributes
+                       NULL);          // no template file
 
     // Break if the pipe handle is valid.
 
@@ -51,10 +51,10 @@ int _tmain(int argc, TCHAR *argv[]) {
   // The pipe connected; change to message-read mode.
 
   dwMode = PIPE_READMODE_MESSAGE;
-  fSuccess = SetNamedPipeHandleState(hPipe,   // pipe handle
-                                     &dwMode, // new pipe mode
-                                     NULL,    // don't set maximum bytes
-                                     NULL);   // don't set maximum time
+  fSuccess = SetNamedPipeHandleState(hPipe,    // pipe handle
+                                     &dwMode,  // new pipe mode
+                                     NULL,     // don't set maximum bytes
+                                     NULL);    // don't set maximum time
   if (!fSuccess) {
     _tprintf(TEXT("SetNamedPipeHandleState failed. GLE=%d\n"), GetLastError());
     return -1;
@@ -65,11 +65,11 @@ int _tmain(int argc, TCHAR *argv[]) {
   cbToWrite = (lstrlen(lpvMessage) + 1) * sizeof(TCHAR);
   _tprintf(TEXT("Sending %d byte message: \"%s\"\n"), cbToWrite, lpvMessage);
 
-  fSuccess = WriteFile(hPipe,      // pipe handle
-                       lpvMessage, // message
-                       cbToWrite,  // message length
-                       &cbWritten, // bytes written
-                       NULL);      // not overlapped
+  fSuccess = WriteFile(hPipe,       // pipe handle
+                       lpvMessage,  // message
+                       cbToWrite,   // message length
+                       &cbWritten,  // bytes written
+                       NULL);       // not overlapped
 
   if (!fSuccess) {
     _tprintf(TEXT("WriteFile to pipe failed. GLE=%d\n"), GetLastError());
@@ -81,17 +81,17 @@ int _tmain(int argc, TCHAR *argv[]) {
   do {
     // Read from the pipe.
 
-    fSuccess = ReadFile(hPipe,                   // pipe handle
-                        chBuf,                   // buffer to receive reply
-                        BUFSIZE * sizeof(TCHAR), // size of buffer
-                        &cbRead,                 // number of bytes read
-                        NULL);                   // not overlapped
+    fSuccess = ReadFile(hPipe,                    // pipe handle
+                        chBuf,                    // buffer to receive reply
+                        BUFSIZE * sizeof(TCHAR),  // size of buffer
+                        &cbRead,                  // number of bytes read
+                        NULL);                    // not overlapped
 
     if (!fSuccess && GetLastError() != ERROR_MORE_DATA)
       break;
 
     _tprintf(TEXT("\"%s\"\n"), chBuf);
-  } while (!fSuccess); // repeat loop if ERROR_MORE_DATA
+  } while (!fSuccess);  // repeat loop if ERROR_MORE_DATA
 
   if (!fSuccess) {
     _tprintf(TEXT("ReadFile from pipe failed. GLE=%d\n"), GetLastError());
